@@ -1,0 +1,20 @@
+name: ci
+on: [push, pull_request]
+
+# The benchmark itself is NOT run here — it costs money and calls the model API.
+# CI verifies the harness's *integrity* instead: it typechecks and (once the
+# harness lands) runs unit tests on fixture diffs, task-validity checks, the
+# dist-in-sync check, and the "README tables regenerate identically" check.
+# The sweep runs out-of-CI via workflow_dispatch with a maintainer API key.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run typecheck
+      - run: npm test

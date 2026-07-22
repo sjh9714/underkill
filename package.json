@@ -1,0 +1,21 @@
+{
+  "name": "underkill",
+  "version": "0.0.0",
+  "description": "A skill that stops your AI coding agent from over-engineering — plus a benchmark that proves it.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build-dist": "tsx scripts/build-dist.ts",
+    "bench": "tsx bench/src/run.ts",
+    "report": "tsx bench/src/report.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-morph": "^23.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

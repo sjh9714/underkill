@@ -1,0 +1,48 @@
+// Shared data model for the benchmark harness.
+
+export type Condition = "on" | "off";
+
+export interface Trap {
+  name: string;
+  detect:
+    | { type: "regex"; pattern: string; glob: string }
+    | { type: "deps-added" }
+    | { type: "exports-gt"; max: number };
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  tags: string[];
+  timeoutMin: number;
+  maxTurns: number;
+  traps: Trap[];
+}
+
+// Everything measured for a single (task, condition, trial) run.
+export interface RunResult {
+  runId: string;
+  taskId: string;
+  condition: Condition;
+  trial: number;
+  model: string;
+  cliVersion: string;
+  ranAt: string; // ISO date, stamped by the runner after the run
+
+  // accuracy — the primary gate
+  accepted: boolean;
+  failingTests: string[];
+
+  // scope metrics
+  locAddedSrc: number;
+  locAddedTest: number;
+  filesCreated: number;
+  depsAdded: string[];
+  exportedSymbols: number;
+  trapsTriggered: string[];
+
+  // cost/effort, read from the CLI's own JSON
+  numTurns: number;
+  totalCostUsd: number;
+  durationMs: number;
+}

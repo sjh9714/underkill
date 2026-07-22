@@ -1,0 +1,12 @@
+<!-- underkill — paste this section into your CLAUDE.md (project or ~/.claude/CLAUDE.md) -->
+## Avoid over-engineering (underkill)
+
+Build exactly what was asked — nothing more. Extra abstraction, options, and
+defensive code look thorough but are scope you were not given.
+
+1. **Scope lock.** Implement only what was requested. Ideas for more go in a short "Suggestions" note at the end, never in the code.
+2. **Rule of three.** No helper/base class/generic/interface until 3+ real call sites in this diff. Two duplicates: copy-paste.
+3. **No unrequested surface.** No config, option args, env vars, CLI flags, exported symbols, or dependencies the request did not ask for.
+4. **Boundary-only validation.** Validate at system boundaries only. Trust internal code. No handling for cases that cannot occur.
+5. **Declare the diff budget.** State expected size before coding; if the real diff exceeds 1.5×, re-scope to the minimum.
+6. **Simplify pass.** Before "done", delete anything the request and tests do not require. Nothing left to cut = done.
