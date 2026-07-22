@@ -194,6 +194,35 @@ README.
 7. "off" contamination → enforce `CLAUDE_CONFIG_DIR` isolation in `workspace.ts`.
 8. Missing tool permissions block `npm install` → nail down `allowedTools` in the pilot.
 
+## Pilot results (2026-07-22, gate: PASSED)
+
+`bench/results/pilot-opus-4-8/` — 3 tasks × on/off × 3 trials, claude-opus-4-8,
+CLI 2.1.216, $2.29 total, 18/18 accepted (accuracy gate holds in both
+conditions).
+
+| task | src LOC off → on (median) | effect |
+|---|---|---|
+| 01-fetch-retry | 15 → 15 | none — task too small to over-build |
+| 02-ttl-cache | 21 → 13 | −38% |
+| 03-todo-cli | 42 → 20 | −52% |
+
+Phase-1 gate: effect confirmed on 2 of 3 tasks with zero accuracy cost —
+proceed to Phase 2. Learnings for Phase 2:
+
+1. **Opus 4.8 over-builds differently than the traps assumed.** Only 1 trap hit
+   in 18 runs (extra-exports, 02-off). The extra "off" code is *defensive
+   structure*: double validation (existsSync + try/catch + Array.isArray for
+   the same file), single-call-site helpers (`save()`), `main()` wrappers.
+   Add trap detectors for these patterns (single-use function, redundant
+   validation) or accept that src LOC carries more of the headline than D3
+   assumed. Do not loosen existing traps — precision stays first.
+2. **01-fetch-retry shows a floor effect** — modern models don't over-build a
+   10-line util. Phase-2 task selection should weight brownfield edits and
+   app-shaped tasks (where the 40→20 spread lives), keeping one floor task
+   honestly in the table per D4.
+3. Cost reality: ~$0.12/run on Opus 4.8 → full 12×2×5 sweep ≈ $15–30, well
+   under the DESIGN estimate; trials can go to K=5 without budget pressure.
+
 ## Continuing in a fresh session (why this repo exists standalone)
 
 Start a new Claude Code session **in this directory** to keep the model on Fable:
