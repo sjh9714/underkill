@@ -17,18 +17,14 @@ tasks with the skill **on vs. off** and measures what actually changes.
 
 ## The claim (measured, not vibes)
 
-> ⚠️ Placeholder — these numbers get filled in by the benchmark in [`bench/`](bench/).
-> They are generated deterministically from `bench/results/` by `npm run report`,
-> never typed by hand. See [Methodology](#methodology).
+Everything between the markers below — tables and the before/after diff — is
+generated deterministically from the raw runs in `bench/results/` by
+`npm run report`, never typed by hand (CI fails if it doesn't reproduce
+byte-identically). See [Methodology](#methodology).
 
-| Metric (skill off → on) | Result |
-|---|---|
-| Unrequested-scope traps triggered | `TBD → TBD` |
-| Accuracy (acceptance tests passing) | `TBD → TBD` (must not drop) |
-| Source lines added (median) | `TBD → TBD` |
-| Cost per task | `TBD → TBD` |
-
-*Run on `TBD` across `12` tasks × `5` trials. Full per-task table and raw logs below.*
+<!-- BENCH:START -->
+*Benchmark sweep not yet committed — run `npm run bench` then `npm run report`.*
+<!-- BENCH:END -->
 
 ## Install (30 seconds)
 
@@ -51,16 +47,6 @@ of truth; every variant is generated from it):
 4. **Boundary-only validation** — validate at system edges; trust internal code.
 5. **Declare the diff budget** — state the size before coding; re-scope if it blows 1.5×.
 6. **Simplify pass** — before "done", delete everything the request and tests don't require.
-
-## Before / after
-
-> ⚠️ Placeholder — replaced with a real diff pulled from a benchmark run.
-
-```diff
-  // "add a function that fetches a URL and retries on failure"
-- // skill OFF: 45 lines — RetryOptions interface, backoff strategy, custom error class
-+ // skill ON:  12 lines — does exactly that
-```
 
 ## Methodology
 
@@ -90,9 +76,13 @@ Reproduce:
 
 ```bash
 npm install
-npm run bench -- --model claude-opus-4-8 --trials 5
+npm run bench -- --model claude-opus-4-8 --trials 5 --sweep my-sweep
 npm run report      # regenerates the tables above from bench/results/
 ```
+
+Runs are isolated (temp workspace, scratch `CLAUDE_CONFIG_DIR`), capped with
+`--max-budget-usd` per run plus a cumulative sweep cap, and resumable — rerun
+the same command after a crash and completed runs are skipped.
 
 ## License
 

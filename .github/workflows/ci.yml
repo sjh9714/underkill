@@ -18,4 +18,5 @@ jobs:
       - run: npm install
       - run: npm run typecheck
       - run: npm run build-dist -- --check
+      - run: npm run report -- --check
       - run: npm test
