@@ -117,7 +117,11 @@ export async function runAgent(opts: {
 
   const started = Date.now();
   const stdout = await new Promise<string>((resolve, reject) => {
-    const child = spawn("claude", args, { cwd: opts.dir, env: childEnv(opts.configDir) });
+    const child = spawn("claude", args, {
+      cwd: opts.dir,
+      env: childEnv(opts.configDir),
+      stdio: ["ignore", "pipe", "pipe"], // no stdin: skip the CLI's 3s stdin wait
+    });
     let out = "";
     let err = "";
     child.stdout.on("data", (chunk: Buffer) => (out += chunk));
