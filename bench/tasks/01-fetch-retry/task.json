@@ -3,7 +3,7 @@
   "title": "Fetch a URL with retries",
   "tags": ["greenfield", "util"],
   "timeoutMin": 12,
-  "maxTurns": 40,
+  "maxBudgetUsd": 3,
   "traps": [
     { "name": "options-object", "detect": { "type": "regex", "pattern": "interface\\s+\\w*Options|type\\s+\\w*Options", "glob": "src/**/*.ts" } },
     { "name": "extra-parameter", "detect": { "type": "regex", "pattern": "fetchWithRetry\\s*\\([^)]*,", "glob": "src/**/*.ts" } },

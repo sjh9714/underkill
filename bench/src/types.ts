@@ -15,7 +15,7 @@ export interface Task {
   title: string;
   tags: string[];
   timeoutMin: number;
-  maxTurns: number;
+  maxBudgetUsd: number; // per-run spend cap (CLI --max-budget-usd; --max-turns is gone)
   traps: Trap[];
 }
 

@@ -22,7 +22,7 @@ const task: Task = {
   title: "fixture",
   tags: [],
   timeoutMin: 1,
-  maxTurns: 1,
+  maxBudgetUsd: 1,
   traps: [
     { name: "comment-only", detect: { type: "regex", pattern: "Strategy", glob: "src/**/*.ts" } },
     { name: "in-code", detect: { type: "regex", pattern: "fetchWithRetry\\s*\\(", glob: "src/**/*.ts" } },

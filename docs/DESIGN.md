@@ -64,7 +64,7 @@ so it doesn't hang a headless run.
 ### Task schema
 ```
 bench/tasks/<id>/
-  task.json     # id, title, tags, timeoutMin, maxTurns, traps[]
+  task.json     # id, title, tags, timeoutMin, maxBudgetUsd, traps[]
   prompt.md     # the request given to the agent (behavior spec, NO tests)
   template/     # starting workspace (package.json, tsconfig, existing code)
   acceptance/   # hold-out vitest tests — copied in AFTER the run
@@ -103,10 +103,11 @@ fixture fires the expected ones.
    `skill/dist/claude-code/CLAUDE.md.snippet` (D1); **off** → nothing.
 3. `spawn`:
    ```
-   CLAUDE_CONFIG_DIR=<isolated dir> claude -p "$(cat prompt.md)" \
+   CLAUDE_CONFIG_DIR=<isolated dir> claude -p \
      --model claude-opus-4-8 --output-format stream-json --verbose \
-     --max-turns 40 --permission-mode acceptEdits \
-     --allowedTools "Write Edit Read Glob Grep Bash(npm:*) Bash(node:*) Bash(npx:*)"
+     --max-budget-usd <task.maxBudgetUsd> --permission-mode acceptEdits \
+     --allowedTools "Write,Edit,Read,Glob,Grep,Bash(npm:*),Bash(node:*),Bash(npx:*)" \
+     "$(cat prompt.md)"
    ```
    Capture stdout → `logs/<run-id>.ndjson`; wall-clock timeout kills the run.
 4. Metrics from `git diff baseline..worktree`: LOC added/removed (src vs test
@@ -126,7 +127,8 @@ median −X% [CI]" — no p-value spam. Publish the full per-task table.
 ### Cost (real, not estimated — read `total_cost_usd` from each run)
 Pilot (3×2×3 = 18 runs) ≈ $10–30, ~40 min. Full Opus 4.8 sweep (120) ≈
 $60–180, 3–5 h at 3-way parallel. Sonnet 5 sweep ≈ $25–75. Guardrails:
-`--max-turns 40`, 12–15 min wall-clock kill, cumulative budget cap.
+`--max-budget-usd` per run (the CLI dropped `--max-turns` as of 2.1.216),
+12–15 min wall-clock kill, cumulative sweep budget cap.
 
 ### Skeptic-defense matrix (goes in README Methodology)
 | Attack | Defense |
