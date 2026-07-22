@@ -1,28 +1,22 @@
-# underkill — design & build plan
+# underkill — design & methodology
 
-> This file is the self-contained spec. A fresh Claude Code / Fable session can
-> read it and continue the build without any prior chat context.
+> Self-contained spec: this file plus the repo is enough to understand, audit,
+> or extend the benchmark without any other context.
 
 ## Context
 
-GitHub stars in 2026 flow overwhelmingly to the AI-coding-agent ecosystem.
-"Agent skill" markdown repos are one of the fastest-growing categories
-(`mattpocock/skills` 180k★, `Nutlope/hallmark` +9k/week). Agent
-**over-engineering** — adding abstractions, options, config, and defensive code
-nobody asked for — is a loudly-felt, validated pain (a r/ClaudeCode "lazy senior
-dev mode, 6× less code" post hit ~1,900 upvotes) but **no repo owns the
-category** (GitHub search for a dedicated over-engineering skill returns ~0).
-Anti-sycophancy, by contrast, is already saturated (a whole GitHub topic, dozens
-of repos) — so we avoid it.
+Agent **over-engineering** — adding abstractions, options, config, and
+defensive code nobody asked for — is a widely-felt pain (a r/ClaudeCode "lazy
+senior dev mode" post hit ~1,900 upvotes), and the rulesets that promise to fix
+it advertise dramatic numbers ("6× less", "80–94% less code"). What none of
+them shipped at the time this project started was a **correctness-gated
+measurement**: proof that the smaller code still does what was asked, under a
+protocol fixed before the results existed.
 
-The gap: proven demand, scattered prompts, no definitive product. The
-differentiator vs. "the 50th markdown dump": **back the claim with a
-reproducible benchmark.** The magic in these projects is always a *number*
-("6× less", "54% less code"); we produce that number honestly.
-
-Goal: a short opinionated skill + a benchmark that measures its effect, launched
-with a skeptic-proof methodology. Built fresh (no dependency on any prior repo),
-no security framing (so Fable stays on).
+Goal: a short opinionated ruleset, plus an honest, reproducible benchmark of
+its effect — and, by the same protocol, of the other rulesets in the category.
+The methodology is designed to be auditable end to end: every design decision
+below exists to close a specific way benchmarks of this kind mislead.
 
 ## Key design decisions
 
@@ -186,10 +180,9 @@ key) and results are committed by PR. README states this explicitly.
 detectors → stats/report + CI → commit tasks/protocol (get the pre-result hash)
 → full Opus 4.8 K=5 sweep → commit results + logs.
 
-**Phase 3 — launch (~days):** README (headline, diff, methodology), dist ×3,
-MIT license (done) → Sonnet 5 sweep for generality → launch on r/ClaudeCode
-(cite the original pain post) + Show HN, with the defense matrix already in the
-README.
+**Phase 3 — publish (~days):** README (headline, diff, methodology), dist ×3,
+MIT license (done) → Sonnet 5 sweep for generality → publish with the defense
+matrix in the README.
 
 ## 5. Traps to watch
 
@@ -248,7 +241,7 @@ doesn't sweep is exactly what makes the benchmark credible — the benchmark,
 not the ruleset, is this repo's differentiated asset.
 
 **Sonnet 5 sweep** (`bench/results/sonnet-5/`, $13.80): direction replicates —
-7 of 12 tasks reduced, accuracy 120/120 in both conditions, 0 traps — with a
+6 of 12 tasks reduced, accuracy 120/120 in both conditions, 0 traps — with a
 smaller magnitude because Sonnet's baseline output is already leaner (e.g.
 csv-summarize off-median 12 LOC vs Opus's 21). The honest generality claim:
 the skill never hurts accuracy and shrinks exactly the tasks each model
@@ -283,12 +276,22 @@ proceed to Phase 2. Learnings for Phase 2:
 3. Cost reality: ~$0.12/run on Opus 4.8 → full 12×2×5 sweep ≈ $15–30, well
    under the DESIGN estimate; trials can go to K=5 without budget pressure.
 
-## Continuing in a fresh session (why this repo exists standalone)
+## Known limitations (stated, not hidden)
 
-Start a new Claude Code session **in this directory** to keep the model on Fable:
-the safety classifier reads accumulated conversation context, and the chat that
-designed this project was full of security topics (an agent-exploit lab, pentest
-tooling) that kept tripping it and routing to Opus. A fresh session here has none
-of that history. Nothing about this project is security-related, so Fable should
-stay on. First step for the new session: implement the Phase-1 harness against
-the schema above.
+1. **Task scale.** The 12 tasks are deliberately small (median off-condition
+   solution: ~13 src LOC; five tasks have 3–9-line baselines). This isolates
+   the over-building behavior cleanly and keeps runs cheap and reproducible,
+   but it also floors the measurable effect: an "80–94% reduction" is
+   arithmetically impossible on a 4-line task. Results here say what these
+   rulesets do to *small, well-specified requests* — not to multi-week,
+   multi-file feature work. A realistic-scale task set is the highest-value
+   extension (the harness already supports brownfield via git-diff-vs-baseline).
+2. **Instruments that returned constants.** The accuracy gate passed every run
+   in every condition, and the trap detectors fired twice in 300 runs. Both
+   are reported as-is; on tasks this size, current frontier models simply do
+   not fail these gates. The gates earn their keep as regression guards for
+   other models and larger tasks, not as discriminators here.
+3. **Rules-only injection.** Competing skills are benchmarked by their
+   canonical ruleset text (D8), not their full plugin machinery (hooks,
+   modes). That is the like-for-like comparison with our own snippet, but it
+   under-tests products whose value lives in the machinery.
