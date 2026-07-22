@@ -9,18 +9,20 @@ describe("parseArgs", () => {
       tasks: undefined,
       sweep: undefined,
       budgetUsd: 40,
+      conditions: ["on", "off"],
     });
   });
 
   it("parses explicit values", () => {
     expect(
-      parseArgs(["--model", "claude-sonnet-5", "--trials", "3", "--tasks", "01-a,02-b", "--sweep", "pilot", "--budget-usd", "12"]),
+      parseArgs(["--model", "claude-sonnet-5", "--trials", "3", "--tasks", "01-a,02-b", "--sweep", "pilot", "--budget-usd", "12", "--conditions", "placebo"]),
     ).toEqual({
       model: "claude-sonnet-5",
       trials: 3,
       tasks: ["01-a", "02-b"],
       sweep: "pilot",
       budgetUsd: 12,
+      conditions: ["placebo"],
     });
   });
 });
@@ -38,5 +40,12 @@ describe("buildMatrix", () => {
   it("keeps on/off adjacent per task and trial so conditions run under like circumstances", () => {
     const matrix = buildMatrix(["01-a"], 2);
     expect(matrix.map((m) => `${m.condition}${m.trial}`)).toEqual(["on1", "off1", "on2", "off2"]);
+  });
+
+  it("accepts an explicit condition list (placebo arm)", () => {
+    const matrix = buildMatrix(["01-a"], 1, ["placebo"]);
+    expect(matrix).toEqual([
+      { taskId: "01-a", condition: "placebo", trial: 1, runId: "01-a-placebo-t1" },
+    ]);
   });
 });

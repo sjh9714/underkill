@@ -26,6 +26,7 @@ export interface Args {
   tasks: string[] | undefined;
   sweep: string | undefined;
   budgetUsd: number;
+  conditions: Condition[];
 }
 
 export function parseArgs(argv: string[]): Args {
@@ -39,6 +40,7 @@ export function parseArgs(argv: string[]): Args {
     tasks: get("--tasks")?.split(","),
     sweep: get("--sweep"),
     budgetUsd: Number(get("--budget-usd") ?? 40),
+    conditions: (get("--conditions")?.split(",") as Condition[]) ?? ["on", "off"],
   };
 }
 
@@ -51,11 +53,15 @@ export interface PlannedRun {
 
 // on/off stay adjacent per (task, trial) so both conditions see the same
 // time-of-day, rate-limit, and model-load circumstances.
-export function buildMatrix(taskIds: string[], trials: number): PlannedRun[] {
+export function buildMatrix(
+  taskIds: string[],
+  trials: number,
+  conditions: Condition[] = ["on", "off"],
+): PlannedRun[] {
   const matrix: PlannedRun[] = [];
   for (const taskId of taskIds) {
     for (let trial = 1; trial <= trials; trial++) {
-      for (const condition of ["on", "off"] as const) {
+      for (const condition of conditions) {
         matrix.push({ taskId, condition, trial, runId: `${taskId}-${condition}-t${trial}` });
       }
     }
@@ -136,7 +142,7 @@ async function main(): Promise<void> {
     JSON.stringify({ model: args.model, cliVersion, startedAt: new Date().toISOString(), args }, null, 2),
   );
 
-  const matrix = buildMatrix(taskIds, args.trials);
+  const matrix = buildMatrix(taskIds, args.trials, args.conditions);
   const pending = matrix.filter((m) => !existsSync(path.join(runsDir, `${m.runId}.json`)));
   console.log(`${matrix.length} planned, ${matrix.length - pending.length} already done, ${pending.length} to run`);
 

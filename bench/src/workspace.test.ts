@@ -12,7 +12,7 @@ afterAll(() => {
   for (const dir of created) rmSync(dir, { recursive: true, force: true });
 });
 
-async function prepare(condition: "on" | "off") {
+async function prepare(condition: "on" | "off" | "placebo") {
   const ws = await prepareWorkspace("01-fetch-retry", condition);
   created.push(ws.dir, ws.configDir);
   return ws;
@@ -44,6 +44,15 @@ describe("prepareWorkspace", () => {
   it("off: writes no CLAUDE.md", async () => {
     const { dir } = await prepare("off");
     expect(existsSync(path.join(dir, "CLAUDE.md"))).toBe(false);
+  });
+
+  it("placebo: writes the neutral instructions, which say nothing about scope or size", async () => {
+    const { dir } = await prepare("placebo");
+    const content = readFileSync(path.join(dir, "CLAUDE.md"), "utf8");
+    expect(content).toBe(readFileSync(path.join(root, "bench/placebo-instructions.md"), "utf8"));
+    for (const word of ["scope", "minimal", "abstraction", "simplif", "exactly what"]) {
+      expect(content.toLowerCase()).not.toContain(word);
+    }
   });
 
   it("provides an isolated empty config dir", async () => {

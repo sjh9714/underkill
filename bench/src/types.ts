@@ -1,6 +1,8 @@
 // Shared data model for the benchmark harness.
 
-export type Condition = "on" | "off";
+// "placebo" injects style-only instructions of comparable length (control arm
+// for the instruction-presence confound); normal sweeps run on/off only.
+export type Condition = "on" | "off" | "placebo";
 
 export interface Trap {
   name: string;
