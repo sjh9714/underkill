@@ -194,6 +194,29 @@ README.
 7. "off" contamination → enforce `CLAUDE_CONFIG_DIR` isolation in `workspace.ts`.
 8. Missing tool permissions block `npm install` → nail down `allowedTools` in the pilot.
 
+## Full sweep results (2026-07-22, Opus 4.8)
+
+`bench/results/opus-4-8/` — 12 tasks × on/off × 5 trials, $14.40, protocol
+hash `b8b53da`. Headline: **8 of 12 tasks reduced, median −21% src LOC per
+task [95% CI −58.5 … 0], accuracy 120/120 in both conditions.** Aggregate src
+LOC 853 → 555 (−35%).
+
+What the sweep taught us, recorded before anyone asks:
+
+1. **The named-abstraction traps never fired — 0/60 in both conditions**
+   (cross-checked: no run added a dependency or excess exports; the detectors
+   themselves are proven live by the overbuilt fixtures in CI). Opus 4.8's
+   over-building on tasks this size is *inline defensive structure* — usage
+   messages, redundant guards, single-use helpers — which shows up as LOC,
+   not as Options interfaces. D3 stands as honest reporting (the 0/60 row
+   stays in the table) and as a regression guard for other/older models, but
+   the LOC delta and the generated before/after diff carry the headline.
+2. **Well-scoped brownfield edits floor out** (cart-total 4→4, search-bugfix
+   3→3, users-endpoint 9→9): when the prompt names one file and one function,
+   Opus stays put. The spread lives in "create a small thing with a CLI or
+   output shape" (csv-summarize −67%, date-format −60%, todo-cli −57%).
+   Zero-effect tasks stay in the table per D4.
+
 ## Pilot results (2026-07-22, gate: PASSED)
 
 `bench/results/pilot-opus-4-8/` — 3 tasks × on/off × 3 trials, claude-opus-4-8,
