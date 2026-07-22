@@ -5,11 +5,11 @@
 [![ci](https://github.com/sjh9714/underkill/actions/workflows/ci.yml/badge.svg)](https://github.com/sjh9714/underkill/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Ask a coding agent for a small thing and it hands you an options object, a
-config file, a strategy pattern, and error handling for cases that can't happen.
-It optimizes for *looking* complete. `underkill` is a short, opinionated skill
-(for Claude Code, Codex, and Cursor) that makes it build **exactly what you
-asked — nothing more.**
+Ask a coding agent for a small thing and it pads the diff with scope you never
+asked for: guards for inputs that can't occur, a usage banner, a helper with
+one call site, an options object "for flexibility". It optimizes for *looking*
+complete. `underkill` is a short, opinionated skill (for Claude Code, Codex,
+and Cursor) that makes it build **exactly what you asked — nothing more.**
 
 The internet is full of "lazy senior dev mode" prompts. What's missing is
 evidence. So `underkill` ships with a reproducible benchmark that runs the same
@@ -164,9 +164,13 @@ Skeptical? Good. The benchmark is built to survive scrutiny:
 - **We measure unrequested scope, not "less code."** The headline metric is a
   per-task checklist of things you didn't ask for (an options object, a new
   dependency, a strategy pattern). LOC is a secondary proxy.
-- **No cherry-picking.** Tasks and the protocol are committed *before* results
-  exist (provable by commit hash). Every task appears in the table, including the
-  ones where the skill does nothing. Raw per-run logs ship as release artifacts.
+- **No cherry-picking.** Tasks and the protocol were committed *before* results
+  existed — protocol-freeze commit `b8b53da`; the sweeps land in later commits.
+  Every task appears in the table, including the ones where the skill does
+  nothing. Raw runs, stream logs, and per-run diffs are committed under
+  [`bench/results/`](bench/results/). Think a task is rigged or missing?
+  Adversarial task PRs are welcome — the validity gate (reference passes,
+  bare template fails, overbuilt fixture fires every trap) runs in CI.
 - **Fixed and recorded.** Model alias, CLI version, and run date are written into
   `results.json` for every run.
 - **What on-vs-off does and doesn't claim.** The "on" condition injects the exact
