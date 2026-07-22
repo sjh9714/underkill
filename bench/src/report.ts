@@ -7,7 +7,7 @@ import { existsSync } from "node:fs";
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
-import { summarize, type Summary } from "./stats.js";
+import { median, summarize, type Summary } from "./stats.js";
 import type { RunResult } from "./types.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
@@ -40,17 +40,100 @@ export interface Showcase {
   onPatch: string;
 }
 
+// Competing-skill comparison (D8): a "<base>-ponytail" sweep attaches a
+// three-way table to its base sweep's section.
+export interface ComparisonRow {
+  taskId: string;
+  trials: number;
+  off: number;
+  pony: number;
+  on: number;
+  passOff: number;
+  passPony: number;
+  passOn: number;
+}
+
+export interface Comparison {
+  rows: ComparisonRow[];
+  medianDeltaOffPony: number;
+  medianDeltaOffOn: number;
+  passRatePony: number;
+}
+
+export interface ComparisonData extends Comparison {
+  ponytailVersion: string;
+  sweep: string;
+}
+
+const round1 = (x: number): number => Math.round(x * 10) / 10;
+
+export function buildComparison(baseRuns: RunResult[], ponyRuns: RunResult[]): Comparison {
+  const taskIds = [...new Set([...baseRuns, ...ponyRuns].map((r) => r.taskId))].sort();
+  const rows: ComparisonRow[] = taskIds.map((taskId) => {
+    const of = (runs: RunResult[], c: string) =>
+      runs.filter((r) => r.taskId === taskId && r.condition === c);
+    const off = of(baseRuns, "off");
+    const on = of(baseRuns, "on");
+    const pony = of(ponyRuns, "ponytail");
+    return {
+      taskId,
+      trials: off.length,
+      off: median(off.map((r) => r.locAddedSrc)),
+      pony: median(pony.map((r) => r.locAddedSrc)),
+      on: median(on.map((r) => r.locAddedSrc)),
+      passOff: off.filter((r) => r.accepted).length,
+      passPony: pony.filter((r) => r.accepted).length,
+      passOn: on.filter((r) => r.accepted).length,
+    };
+  });
+  const deltas = (pick: (row: ComparisonRow) => number) =>
+    rows.filter((r) => r.off !== 0).map((r) => round1(((pick(r) - r.off) / r.off) * 100));
+  const ponyRunsAll = ponyRuns.filter((r) => r.condition === "ponytail");
+  return {
+    rows,
+    medianDeltaOffPony: round1(median(deltas((r) => r.pony))),
+    medianDeltaOffOn: round1(median(deltas((r) => r.on))),
+    passRatePony: ponyRunsAll.filter((r) => r.accepted).length / Math.max(ponyRunsAll.length, 1),
+  };
+}
+
 export interface SweepReport {
   sweep: string;
   startedAt: string;
   summary: Summary;
   showcase?: Showcase;
+  comparison?: ComparisonData;
 }
 
 const pct = (x: number): string => `${Math.round(x * 100)}%`;
 const signed = (x: number): string => (x > 0 ? `+${x}%` : `${x}%`);
 
-function renderSweep({ sweep, startedAt, summary: s, showcase }: SweepReport): string {
+function renderComparison(c: ComparisonData): string {
+  const sum = (pick: (r: ComparisonRow) => number) => c.rows.reduce((n, r) => n + pick(r), 0);
+  const trialsTotal = sum((r) => r.trials);
+  const lines = [
+    "",
+    "#### How does it compare? off / ponytail / underkill",
+    "",
+    `An independent, pre-registered comparison (see D8 in [docs/DESIGN.md](docs/DESIGN.md)): [ponytail](https://github.com/DietrichGebert/ponytail)'s canonical \`AGENTS.md\` ruleset (${c.ponytailVersion}, vendored verbatim) ran the same tasks, model, and trial count, injected exactly the way our snippet is. The hold-out accuracy gate applies to every condition equally. Raw runs: [\`bench/results/${c.sweep}/\`](bench/results/${c.sweep}/).`,
+    "",
+    "| Metric | off | ponytail | underkill |",
+    "|---|---|---|---|",
+    `| Median src LOC delta per task | — | ${signed(c.medianDeltaOffPony)} | ${signed(c.medianDeltaOffOn)} |`,
+    `| Acceptance pass rate | ${pct(sum((r) => r.passOff) / trialsTotal)} | ${pct(c.passRatePony)} | ${pct(sum((r) => r.passOn) / trialsTotal)} |`,
+    "",
+    "| Task | src LOC (median, off / ponytail / underkill) | pass (off / ponytail / underkill) |",
+    "|---|---|---|",
+  ];
+  for (const r of c.rows) {
+    lines.push(
+      `| ${r.taskId} | ${r.off} / ${r.pony} / ${r.on} | ${r.passOff}/${r.trials} · ${r.passPony}/${r.trials} · ${r.passOn}/${r.trials} |`,
+    );
+  }
+  return lines.join("\n");
+}
+
+function renderSweep({ sweep, startedAt, summary: s, showcase, comparison }: SweepReport): string {
   const lines: string[] = [];
   lines.push(
     `### \`${s.model}\` — ${s.tasksTotal} tasks × ${s.perTask[0]?.trials ?? 0} trials per condition`,
@@ -93,20 +176,26 @@ function renderSweep({ sweep, startedAt, summary: s, showcase }: SweepReport): s
       "</details>",
     );
   }
-  return lines.join("\n");
+  let out = lines.join("\n");
+  if (comparison) out += `\n${renderComparison(comparison)}`;
+  return out;
 }
 
 export function renderReport(sweeps: SweepReport[]): string {
   return sweeps.map(renderSweep).join("\n\n");
 }
 
+async function loadRuns(sweep: string): Promise<RunResult[]> {
+  const runsDir = path.join(root, "bench/results", sweep, "runs");
+  return Promise.all(
+    (await readdir(runsDir)).sort().map(async (f) => JSON.parse(await readFile(path.join(runsDir, f), "utf8"))),
+  );
+}
+
 async function loadSweep(sweep: string, withShowcase: boolean): Promise<SweepReport> {
   const sweepDir = path.join(root, "bench/results", sweep);
   const meta = JSON.parse(await readFile(path.join(sweepDir, "sweep.json"), "utf8"));
-  const runsDir = path.join(sweepDir, "runs");
-  const runs: RunResult[] = await Promise.all(
-    (await readdir(runsDir)).sort().map(async (f) => JSON.parse(await readFile(path.join(runsDir, f), "utf8"))),
-  );
+  const runs = await loadRuns(sweep);
   const summary = summarize(runs);
 
   let showcase: Showcase | undefined;
@@ -152,7 +241,22 @@ async function main(): Promise<void> {
     console.log("no sweeps under bench/results — README left unchanged");
     return;
   }
-  const reports = await Promise.all(sweeps.map((s, i) => loadSweep(s, i === 0)));
+  // "<base>-ponytail" sweeps are comparison arms (D8), attached to their base
+  // sweep's section rather than rendered as standalone on/off sections
+  const arms = sweeps.filter((name) => name.endsWith("-ponytail"));
+  const normal = sweeps.filter((name) => !name.endsWith("-ponytail"));
+  const reports = await Promise.all(normal.map((s, i) => loadSweep(s, i === 0)));
+  for (const arm of arms) {
+    const report = reports.find((r) => r.sweep === arm.replace(/-ponytail$/, ""));
+    if (!report) continue;
+    const rulesMeta = await readFile(path.join(root, "bench/ponytail-rules.md"), "utf8");
+    const m = /Version: (\S+) · commit ([0-9a-f]+)/.exec(rulesMeta);
+    report.comparison = {
+      ...buildComparison(await loadRuns(report.sweep), await loadRuns(arm)),
+      ponytailVersion: m ? `${m[1]} @${m[2].slice(0, 7)}` : "unknown",
+      sweep: arm,
+    };
+  }
   const readmePath = path.join(root, "README.md");
   const updated = splice(await readFile(readmePath, "utf8"), renderReport(reports));
   if (process.argv.includes("--check")) {

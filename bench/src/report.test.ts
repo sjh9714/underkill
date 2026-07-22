@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pickRepresentative, renderReport, splice } from "./report.js";
+import { buildComparison, pickRepresentative, renderReport, splice } from "./report.js";
 import { summarize } from "./stats.js";
 import type { RunResult } from "./types.js";
 
@@ -55,6 +55,29 @@ describe("pickRepresentative", () => {
   });
 });
 
+describe("buildComparison", () => {
+  const base = [
+    ...[40, 42, 44].map((loc, i) => run({ runId: `a-off-t${i + 1}`, taskId: "a", condition: "off", trial: i + 1, locAddedSrc: loc })),
+    ...[18, 20, 22].map((loc, i) => run({ runId: `a-on-t${i + 1}`, taskId: "a", condition: "on", trial: i + 1, locAddedSrc: loc })),
+  ];
+  const pony = [28, 30, 32].map((loc, i) =>
+    run({ runId: `a-ponytail-t${i + 1}`, taskId: "a", condition: "ponytail", trial: i + 1, locAddedSrc: loc, accepted: i !== 0 }),
+  );
+  const cmp = buildComparison(base, pony);
+
+  it("computes per-task medians for all three conditions", () => {
+    expect(cmp.rows).toEqual([
+      { taskId: "a", trials: 3, off: 42, pony: 30, on: 20, passOff: 3, passPony: 2, passOn: 3 },
+    ]);
+  });
+
+  it("computes median deltas vs off and pass rates", () => {
+    expect(cmp.medianDeltaOffPony).toBe(-28.6);
+    expect(cmp.medianDeltaOffOn).toBe(-52.4);
+    expect(cmp.passRatePony).toBeCloseTo(2 / 3);
+  });
+});
+
 describe("renderReport", () => {
   const runs = [
     run({ runId: "t-off-t1", condition: "off", locAddedSrc: 40, trapsTriggered: ["opts"] }),
@@ -93,6 +116,30 @@ describe("renderReport", () => {
   it("embeds both showcase patches verbatim", () => {
     expect(md).toContain("+off diff");
     expect(md).toContain("+on diff");
+  });
+
+  it("renders a comparison section when the sweep has one", () => {
+    const base = [
+      run({ runId: "t-off-t1", condition: "off", locAddedSrc: 42 }),
+      run({ runId: "t-on-t1", condition: "on", locAddedSrc: 18 }),
+    ];
+    const pony = [run({ runId: "t-ponytail-t1", condition: "ponytail", locAddedSrc: 30 })];
+    const withCmp = renderReport([
+      {
+        sweep: "opus",
+        startedAt: "2026-07-22T01:00:00.000Z",
+        summary: summarize(base),
+        comparison: {
+          ...buildComparison(base, pony),
+          ponytailVersion: "v4.8.4 @16f2980",
+          sweep: "opus-ponytail",
+        },
+      },
+    ]);
+    expect(withCmp).toContain("ponytail");
+    expect(withCmp).toContain("v4.8.4 @16f2980");
+    expect(withCmp).toContain("42 / 30 / 18");
+    expect(withCmp).toContain("bench/results/opus-ponytail/");
   });
 
   it("is deterministic", () => {
