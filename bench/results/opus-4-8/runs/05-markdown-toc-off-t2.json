@@ -1,0 +1,20 @@
+{
+  "runId": "05-markdown-toc-off-t2",
+  "taskId": "05-markdown-toc",
+  "condition": "off",
+  "trial": 2,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:31:49.463Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 21,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.112011,
+  "durationMs": 11578
+}

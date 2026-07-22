@@ -1,0 +1,22 @@
+diff --git a/src/cli.ts b/src/cli.ts
+new file mode 100644
+index 0000000..4e2c51f
+--- /dev/null
++++ b/src/cli.ts
+@@ -0,0 +1,16 @@
++const iso = process.argv[2];
++
++if (!iso) {
++  console.error("Usage: npx tsx src/cli.ts <iso>");
++  process.exit(1);
++}
++
++const date = new Date(iso);
++
++const pad = (n: number) => String(n).padStart(2, "0");
++
++const formatted =
++  `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}` +
++  ` ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
++
++console.log(formatted);

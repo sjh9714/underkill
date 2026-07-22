@@ -1,0 +1,20 @@
+{
+  "runId": "07-search-bugfix-on-t5",
+  "taskId": "07-search-bugfix",
+  "condition": "on",
+  "trial": 5,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:33:48.783Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 4,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 3,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.11202899999999999,
+  "durationMs": 13514
+}

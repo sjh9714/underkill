@@ -1,0 +1,20 @@
+{
+  "runId": "10-relative-time-off-t5",
+  "taskId": "10-relative-time",
+  "condition": "off",
+  "trial": 5,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:36:17.909Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 10,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 2,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.117439,
+  "durationMs": 11753
+}

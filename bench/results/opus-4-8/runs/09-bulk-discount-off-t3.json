@@ -1,0 +1,20 @@
+{
+  "runId": "09-bulk-discount-off-t3",
+  "taskId": "09-bulk-discount",
+  "condition": "off",
+  "trial": 3,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:35:03.824Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 5,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 2,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.1048905,
+  "durationMs": 9354
+}

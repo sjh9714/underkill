@@ -1,0 +1,20 @@
+{
+  "runId": "08-users-endpoint-off-t2",
+  "taskId": "08-users-endpoint",
+  "condition": "off",
+  "trial": 2,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:34:07.714Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 10,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.11523249999999999,
+  "durationMs": 11266
+}

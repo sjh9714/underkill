@@ -1,0 +1,20 @@
+{
+  "runId": "11-csv-summarize-off-t2",
+  "taskId": "11-csv-summarize",
+  "condition": "off",
+  "trial": 2,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:36:44.899Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 19,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 4,
+  "totalCostUsd": 0.129215,
+  "durationMs": 15734
+}

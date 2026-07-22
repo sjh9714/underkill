@@ -23,7 +23,86 @@ generated deterministically from the raw runs in `bench/results/` by
 byte-identically). See [Methodology](#methodology).
 
 <!-- BENCH:START -->
-*Benchmark sweep not yet committed — run `npm run bench` then `npm run report`.*
+### `claude-opus-4-8` — 12 tasks × 5 trials per condition
+
+Run 2026-07-22, CLI `2.1.216 (Claude Code)`, sweep `opus-4-8` (120 runs, $14.40 total). Raw runs, stream logs, and per-run diffs: [`bench/results/opus-4-8/`](bench/results/opus-4-8/).
+
+| Metric (skill off → on) | Result |
+|---|---|
+| Tasks with reduced source LOC | **8 of 12** |
+| Median src LOC delta per task | **-21%** (bootstrap 95% CI -58.5% … 0%) |
+| Runs hitting ≥1 unrequested-scope trap | 0/60 → 0/60 |
+| Acceptance pass rate (must not drop) | 100% → 100% |
+
+| Task | src LOC (median, off → on) | Δ | trap runs (off → on) | pass (off → on) |
+|---|---|---|---|---|
+| 01-fetch-retry | 15 → 13 | -13.3% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 02-ttl-cache | 20 → 13 | -35% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 03-todo-cli | 42 → 18 | -57.1% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 04-slugify | 8 → 8 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 05-markdown-toc | 21 → 15 | -28.6% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 06-cart-total | 4 → 4 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 07-search-bugfix | 3 → 3 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 08-users-endpoint | 9 → 9 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 09-bulk-discount | 5 → 2 | -60% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 10-relative-time | 11 → 10 | -9.1% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 11-csv-summarize | 21 → 7 | -66.7% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 12-date-format | 15 → 6 | -60% | 0/5 → 0/5 | 5/5 → 5/5 |
+
+#### Before / after — `11-csv-summarize`, the runs at each condition's median (21 → 7 src LOC)
+
+Skill **on** (`11-csv-summarize-on-t2`):
+
+```diff
+diff --git a/src/cli.ts b/src/cli.ts
+new file mode 100644
+index 0000000..defd4ef
+--- /dev/null
++++ b/src/cli.ts
+@@ -0,0 +1,7 @@
++import { readFileSync } from "node:fs";
++
++const [file] = process.argv.slice(2);
++const lines = readFileSync(file, "utf8").split("\n").filter((l) => l !== "");
++
++console.log(`rows: ${lines.length - 1}`);
++console.log(`cols: ${lines[0].split(",").length}`);
+```
+
+<details>
+<summary>Skill <b>off</b> (`11-csv-summarize-off-t1`) — click to expand</summary>
+
+```diff
+diff --git a/src/cli.ts b/src/cli.ts
+new file mode 100644
+index 0000000..1a44e18
+--- /dev/null
++++ b/src/cli.ts
+@@ -0,0 +1,21 @@
++import { readFileSync } from "node:fs";
++
++const file = process.argv[2];
++if (!file) {
++  console.error("usage: npx tsx src/cli.ts <file>");
++  process.exit(1);
++}
++
++const content = readFileSync(file, "utf8");
++const lines = content.split("\n");
++
++// Drop a trailing empty line from a final newline.
++if (lines.length > 0 && lines[lines.length - 1] === "") {
++  lines.pop();
++}
++
++const cols = lines.length > 0 ? lines[0].split(",").length : 0;
++const rows = Math.max(0, lines.length - 1);
++
++console.log(`rows: ${rows}`);
++console.log(`cols: ${cols}`);
+```
+
+</details>
 <!-- BENCH:END -->
 
 ## Install (30 seconds)
