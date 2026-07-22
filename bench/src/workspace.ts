@@ -23,12 +23,16 @@ export async function prepareWorkspace(
   await mkdir(base, { recursive: true });
   const dir = await mkdtemp(path.join(base, `${taskId}-${condition}-`));
   await cp(path.join(root, "bench/tasks", taskId, "template"), dir, { recursive: true });
-  if (condition !== "off") {
-    const source =
-      condition === "on"
-        ? "skill/dist/claude-code/CLAUDE.md.snippet"
-        : "bench/placebo-instructions.md";
-    await writeFile(path.join(dir, "CLAUDE.md"), await readFile(path.join(root, source), "utf8"));
+  if (condition === "on") {
+    await writeFile(
+      path.join(dir, "CLAUDE.md"),
+      await readFile(path.join(root, "skill/dist/claude-code/CLAUDE.md.snippet"), "utf8"),
+    );
+  } else if (condition === "placebo") {
+    // strip the file's editor-facing meta comment — it describes the experiment
+    // and must never reach the model
+    const raw = await readFile(path.join(root, "bench/placebo-instructions.md"), "utf8");
+    await writeFile(path.join(dir, "CLAUDE.md"), raw.replace(/^<!--[\s\S]*?-->\n/, ""));
   }
   git(dir, "init", "-q", "-b", "main");
   git(dir, "add", "-A");

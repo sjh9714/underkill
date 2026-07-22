@@ -46,11 +46,13 @@ describe("prepareWorkspace", () => {
     expect(existsSync(path.join(dir, "CLAUDE.md"))).toBe(false);
   });
 
-  it("placebo: writes the neutral instructions, which say nothing about scope or size", async () => {
+  it("placebo: injects the neutral instructions without the meta comment, saying nothing about scope or size", async () => {
     const { dir } = await prepare("placebo");
     const content = readFileSync(path.join(dir, "CLAUDE.md"), "utf8");
-    expect(content).toBe(readFileSync(path.join(root, "bench/placebo-instructions.md"), "utf8"));
-    for (const word of ["scope", "minimal", "abstraction", "simplif", "exactly what"]) {
+    expect(content).toContain("## Code quality notes");
+    // the file's meta comment describes the experiment and must never reach the model
+    expect(content).not.toContain("<!--");
+    for (const word of ["scope", "minimal", "abstraction", "simplif", "exactly what", "placebo"]) {
       expect(content.toLowerCase()).not.toContain(word);
     }
   });
