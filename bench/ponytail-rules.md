@@ -1,5 +1,13 @@
 <!-- Vendored control-arm ruleset for the benchmark's "ponytail" condition.
-     Source: https://github.com/DietrichGebert/ponytail (MIT License)
+     Source: https://github.com/DietrichGebert/ponytail
+
+     MIT License — Copyright (c) DietrichGebert
+     Permission is hereby granted, free of charge, to any person obtaining a
+     copy of this software and associated documentation files, to deal in
+     the Software without restriction, subject to including this notice in
+     all copies or substantial portions. THE SOFTWARE IS PROVIDED "AS IS",
+     WITHOUT WARRANTY OF ANY KIND. Full text:
+     https://github.com/DietrichGebert/ponytail/blob/16f2980/LICENSE
      File: AGENTS.md (the repo's canonical ruleset)
      Version: v4.8.4 · commit 16f29800fd2681bdf24f3eb4ccffe38be3baec6b
      Fetched: 2026-07-22 · content below is verbatim and unmodified.
