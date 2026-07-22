@@ -1,0 +1,20 @@
+{
+  "runId": "09-bulk-discount-on-t5",
+  "taskId": "09-bulk-discount",
+  "condition": "on",
+  "trial": 5,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:46:53.155Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 5,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 2,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.10097039999999999,
+  "durationMs": 7912
+}

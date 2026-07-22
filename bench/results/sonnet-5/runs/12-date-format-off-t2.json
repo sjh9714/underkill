@@ -1,0 +1,20 @@
+{
+  "runId": "12-date-format-off-t2",
+  "taskId": "12-date-format",
+  "condition": "off",
+  "trial": 2,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:49:53.314Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 6,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 5,
+  "totalCostUsd": 0.12430290000000001,
+  "durationMs": 13983
+}

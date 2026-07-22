@@ -217,6 +217,13 @@ What the sweep taught us, recorded before anyone asks:
    output shape" (csv-summarize −67%, date-format −60%, todo-cli −57%).
    Zero-effect tasks stay in the table per D4.
 
+**Sonnet 5 sweep** (`bench/results/sonnet-5/`, $13.80): direction replicates —
+7 of 12 tasks reduced, accuracy 120/120 in both conditions, 0 traps — with a
+smaller magnitude because Sonnet's baseline output is already leaner (e.g.
+csv-summarize off-median 12 LOC vs Opus's 21). The honest generality claim:
+the skill never hurts accuracy and shrinks exactly the tasks each model
+over-builds.
+
 ## Pilot results (2026-07-22, gate: PASSED)
 
 `bench/results/pilot-opus-4-8/` — 3 tasks × on/off × 3 trials, claude-opus-4-8,

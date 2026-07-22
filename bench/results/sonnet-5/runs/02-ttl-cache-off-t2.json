@@ -1,0 +1,20 @@
+{
+  "runId": "02-ttl-cache-off-t2",
+  "taskId": "02-ttl-cache",
+  "condition": "off",
+  "trial": 2,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:40:46.612Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 20,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.09619710000000001,
+  "durationMs": 8705
+}

@@ -103,6 +103,32 @@ index 0000000..1a44e18
 ```
 
 </details>
+
+### `claude-sonnet-5` — 12 tasks × 5 trials per condition
+
+Run 2026-07-22, CLI `2.1.216 (Claude Code)`, sweep `sonnet-5` (120 runs, $13.80 total). Raw runs, stream logs, and per-run diffs: [`bench/results/sonnet-5/`](bench/results/sonnet-5/).
+
+| Metric (skill off → on) | Result |
+|---|---|
+| Tasks with reduced source LOC | **6 of 12** |
+| Median src LOC delta per task | **-4.1%** (bootstrap 95% CI -21.1% … 0%) |
+| Runs hitting ≥1 unrequested-scope trap | 0/60 → 0/60 |
+| Acceptance pass rate (must not drop) | 100% → 100% |
+
+| Task | src LOC (median, off → on) | Δ | trap runs (off → on) | pass (off → on) |
+|---|---|---|---|---|
+| 01-fetch-retry | 18 → 15 | -16.7% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 02-ttl-cache | 20 → 16 | -20% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 03-todo-cli | 36 → 25 | -30.6% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 04-slugify | 8 → 8 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 05-markdown-toc | 20 → 15 | -25% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 06-cart-total | 4 → 4 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 07-search-bugfix | 3 → 3 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 08-users-endpoint | 9 → 9 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 09-bulk-discount | 5 → 5 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 10-relative-time | 10 → 10 | 0% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 11-csv-summarize | 12 → 11 | -8.3% | 0/5 → 0/5 | 5/5 → 5/5 |
+| 12-date-format | 9 → 7 | -22.2% | 0/5 → 0/5 | 5/5 → 5/5 |
 <!-- BENCH:END -->
 
 ## Install (30 seconds)

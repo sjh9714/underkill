@@ -1,0 +1,17 @@
+diff --git a/src/cli.ts b/src/cli.ts
+new file mode 100644
+index 0000000..399816f
+--- /dev/null
++++ b/src/cli.ts
+@@ -0,0 +1,11 @@
++import { readFileSync } from "node:fs";
++
++const path = process.argv[2];
++const content = readFileSync(path, "utf-8");
++
++const lines = content.split(/\r\n|\r|\n/).filter((line) => line.length > 0);
++const [header, ...dataLines] = lines;
++const cols = header.split(",").length;
++
++console.log(`rows: ${dataLines.length}`);
++console.log(`cols: ${cols}`);

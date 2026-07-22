@@ -1,0 +1,20 @@
+{
+  "runId": "08-users-endpoint-on-t4",
+  "taskId": "08-users-endpoint",
+  "condition": "on",
+  "trial": 4,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:46:04.717Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 9,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.10640669999999999,
+  "durationMs": 9632
+}

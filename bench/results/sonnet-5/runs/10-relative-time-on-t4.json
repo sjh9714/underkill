@@ -1,0 +1,20 @@
+{
+  "runId": "10-relative-time-on-t4",
+  "taskId": "10-relative-time",
+  "condition": "on",
+  "trial": 4,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:47:37.982Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 10,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 2,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.1086447,
+  "durationMs": 14964
+}

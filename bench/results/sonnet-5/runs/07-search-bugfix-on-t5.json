@@ -1,0 +1,20 @@
+{
+  "runId": "07-search-bugfix-on-t5",
+  "taskId": "07-search-bugfix",
+  "condition": "on",
+  "trial": 5,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:45:34.585Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 3,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 3,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.1002276,
+  "durationMs": 8891
+}

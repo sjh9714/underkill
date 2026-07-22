@@ -1,0 +1,20 @@
+{
+  "runId": "05-markdown-toc-on-t5",
+  "taskId": "05-markdown-toc",
+  "condition": "on",
+  "trial": 5,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:44:10.137Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 16,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.10390769999999999,
+  "durationMs": 9657
+}

@@ -1,0 +1,11 @@
+{
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "startedAt": "2026-07-22T01:39:37.305Z",
+  "args": {
+    "model": "claude-sonnet-5",
+    "trials": 5,
+    "sweep": "sonnet-5",
+    "budgetUsd": 30
+  }
+}

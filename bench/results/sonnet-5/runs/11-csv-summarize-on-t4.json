@@ -1,0 +1,20 @@
+{
+  "runId": "11-csv-summarize-on-t4",
+  "taskId": "11-csv-summarize",
+  "condition": "on",
+  "trial": 4,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:49:00.939Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 11,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 8,
+  "totalCostUsd": 0.1747887,
+  "durationMs": 22219
+}

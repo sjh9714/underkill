@@ -1,0 +1,20 @@
+{
+  "runId": "03-todo-cli-on-t4",
+  "taskId": "03-todo-cli",
+  "condition": "on",
+  "trial": 4,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:42:15.237Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 24,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 4,
+  "totalCostUsd": 0.12149940000000001,
+  "durationMs": 15794
+}

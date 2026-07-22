@@ -1,0 +1,20 @@
+{
+  "runId": "01-fetch-retry-off-t1",
+  "taskId": "01-fetch-retry",
+  "condition": "off",
+  "trial": 1,
+  "model": "claude-sonnet-5",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T01:39:50.834Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 18,
+  "locAddedTest": 0,
+  "filesCreated": 0,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.09813720000000001,
+  "durationMs": 9298
+}
