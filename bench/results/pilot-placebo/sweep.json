@@ -1,0 +1,19 @@
+{
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "startedAt": "2026-07-22T06:09:41.159Z",
+  "args": {
+    "model": "claude-opus-4-8",
+    "trials": 3,
+    "tasks": [
+      "03-todo-cli",
+      "11-csv-summarize",
+      "12-date-format"
+    ],
+    "sweep": "pilot-placebo",
+    "budgetUsd": 5,
+    "conditions": [
+      "placebo"
+    ]
+  }
+}

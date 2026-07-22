@@ -1,0 +1,20 @@
+{
+  "runId": "12-date-format-placebo-t1",
+  "taskId": "12-date-format",
+  "condition": "placebo",
+  "trial": 1,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:10:54.784Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 14,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.1186605,
+  "durationMs": 13841
+}

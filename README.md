@@ -173,11 +173,14 @@ Skeptical? Good. The benchmark is built to survive scrutiny:
   bare template fails, overbuilt fixture fires every trap) runs in CI.
 - **Fixed and recorded.** Model alias, CLI version, and run date are written into
   `results.json` for every run.
-- **What on-vs-off does and doesn't claim.** The "on" condition injects the exact
-  snippet you'd install; "off" is a bare workspace — the real-world default. That
-  answers "does installing this help?", not "would any instructions help?" —
-  instruction-presence is a possible confound, checkable with a small
-  placebo-instructions arm in the pilot.
+- **"Any instructions would do that" — checked, and no.** The "on" condition
+  injects the exact snippet you'd install; "off" is a bare workspace. A placebo
+  arm (style-only instructions of comparable length, no scope rules —
+  [`bench/placebo-instructions.md`](bench/placebo-instructions.md)) run on the
+  three strongest-effect tasks did **not** reduce code: median src LOC vs off
+  went 42→56, 21→26, 15→14, while the skill sits at 18, 7, 6. The effect comes
+  from what the rules say, not from a CLAUDE.md existing
+  ([raw runs](bench/results/pilot-placebo/)).
 
 See [`docs/DESIGN.md`](docs/DESIGN.md) for the full design and the skeptic-defense matrix.
 

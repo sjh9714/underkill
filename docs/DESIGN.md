@@ -217,6 +217,15 @@ What the sweep taught us, recorded before anyone asks:
    output shape" (csv-summarize −67%, date-format −60%, todo-cli −57%).
    Zero-effect tasks stay in the table per D4.
 
+**Placebo arm** (`bench/results/pilot-placebo/`, post-hoc robustness check,
+clearly labeled as such): style-only instructions of comparable length
+(`bench/placebo-instructions.md`, meta comment stripped at injection) on the
+three strongest-effect tasks, Opus 4.8 × 3 trials. Result: placebo does *not*
+reduce code — medians vs off: todo-cli 42→56, csv-summarize 21→26,
+date-format 15→14 (all 9 accepted), while "on" sits at 18/7/6. The
+instruction-presence confound is dead: the effect comes from what the rules
+say, not from a CLAUDE.md existing.
+
 **Sonnet 5 sweep** (`bench/results/sonnet-5/`, $13.80): direction replicates —
 7 of 12 tasks reduced, accuracy 120/120 in both conditions, 0 traps — with a
 smaller magnitude because Sonnet's baseline output is already leaner (e.g.

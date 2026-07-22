@@ -1,0 +1,20 @@
+{
+  "runId": "03-todo-cli-placebo-t3",
+  "taskId": "03-todo-cli",
+  "condition": "placebo",
+  "trial": 3,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:10:08.967Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 49,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 4,
+  "totalCostUsd": 0.294177,
+  "durationMs": 22379
+}
