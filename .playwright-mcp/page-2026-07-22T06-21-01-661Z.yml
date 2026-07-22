@@ -1,0 +1,26 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]: underkill
+    - generic [ref=e4]: Your AI coding agent over-builds.A 6-rule skill that stops it — and a benchmark that proves the number.
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: −21%
+        - generic [ref=e8]: median src LOC
+      - generic [ref=e9]:
+        - generic [ref=e10]: 100%
+        - generic [ref=e11]: accuracy kept, 240 runs
+      - generic [ref=e12]:
+        - generic [ref=e13]: −67%
+        - generic [ref=e14]: best task
+    - generic [ref=e15]: Claude Code · Codex · Cursor | hold-out tests · pre-registered protocol
+  - generic [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]: skill off — same task
+        - generic [ref=e20]: 21 lines
+      - generic [ref=e21]: "if (!file) { console.error(\"usage: …\"); process.exit(1); } // + trailing-newline dance, // Math.max guards, …14 more"
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - generic [ref=e24]: skill on
+        - generic [ref=e25]: 7 lines
+      - generic [ref=e26]: "const [file] = process.argv.slice(2); const lines = readFileSync(file, \"utf8\") .split(\"\\n\").filter(l => l !== \"\"); console.log(`rows: ${lines.length - 1}`); console.log(`cols: ${lines[0].split(\",\").length}`);"

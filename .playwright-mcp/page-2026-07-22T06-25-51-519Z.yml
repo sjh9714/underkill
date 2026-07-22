@@ -1,0 +1,8 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - generic [ref=f2e3]: underkill — npm run bench
+    - generic [ref=f2e8]: $ npm run bench -- --model claude-opus-4-8 --trials 5 120 planned, 0 already done, 120 to run ✓ 03-todo-cli-off-t3 srcLoc=42 accepted=true ✓ 03-todo-cli-on-t3 srcLoc=18 accepted=true ✓ 11-csv-summarize-off-t1 srcLoc=21 accepted=true ✓ 11-csv-summarize-on-t2 srcLoc=7 accepted=true … 114 more runs, all green done. −21% median src LOC · accuracy 120/120
+  - generic [ref=f2e9]:
+    - generic [ref=f2e10]: underkill_
+    - generic [ref=f2e11]: Your AI coding agent over-builds.Six rules that stop it — and the benchmark that proves it.
+    - generic [ref=f2e12]: Claude Code · Codex · Cursor

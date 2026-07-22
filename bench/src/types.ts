@@ -1,8 +1,9 @@
 // Shared data model for the benchmark harness.
 
-// "placebo" injects style-only instructions of comparable length (control arm
-// for the instruction-presence confound); normal sweeps run on/off only.
-export type Condition = "on" | "off" | "placebo";
+// Control arms beyond on/off (normal sweeps run on/off only):
+//  - "placebo": style-only instructions of comparable length (instruction-presence confound)
+//  - "ponytail": the vendored ruleset of DietrichGebert/ponytail (competing-skill comparison, D8)
+export type Condition = "on" | "off" | "placebo" | "ponytail";
 
 export interface Trap {
   name: string;

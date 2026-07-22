@@ -1,0 +1,8 @@
+- generic [active] [ref=f3e1]:
+  - 'heading "You asked for 7 lines. Your agent wrote 21. underkill: 7. Tests green." [level=1] [ref=f3e2]':
+    - text: You asked for 7 lines.
+    - generic [ref=f3e3]: Your agent wrote 21.
+    - text: "underkill: 7. Tests green."
+  - generic [ref=f3e5]:
+    - generic [ref=f3e6]: underkill
+    - generic [ref=f3e7]: skill + benchmark · −21% median src LOC · 240/240 hold-out tests · Claude Code / Codex / Cursor

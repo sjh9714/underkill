@@ -12,7 +12,7 @@ afterAll(() => {
   for (const dir of created) rmSync(dir, { recursive: true, force: true });
 });
 
-async function prepare(condition: "on" | "off" | "placebo") {
+async function prepare(condition: "on" | "off" | "placebo" | "ponytail") {
   const ws = await prepareWorkspace("01-fetch-retry", condition);
   created.push(ws.dir, ws.configDir);
   return ws;
@@ -55,6 +55,16 @@ describe("prepareWorkspace", () => {
     for (const word of ["scope", "minimal", "abstraction", "simplif", "exactly what", "placebo"]) {
       expect(content.toLowerCase()).not.toContain(word);
     }
+  });
+
+  it("ponytail: injects the vendored ruleset verbatim, without the provenance comment", async () => {
+    const { dir } = await prepare("ponytail");
+    const content = readFileSync(path.join(dir, "CLAUDE.md"), "utf8");
+    expect(content.startsWith("# Ponytail, lazy senior dev mode")).toBe(true);
+    expect(content).toContain("lazy senior developer");
+    // provenance metadata must never reach the model
+    expect(content).not.toContain("<!--");
+    expect(content).not.toContain("Vendored");
   });
 
   it("provides an isolated empty config dir", async () => {
