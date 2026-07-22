@@ -1,0 +1,22 @@
+diff --git a/src/cli.ts b/src/cli.ts
+new file mode 100644
+index 0000000..d531485
+--- /dev/null
++++ b/src/cli.ts
+@@ -0,0 +1,16 @@
++import { readFileSync } from "node:fs";
++
++const file = process.argv[2];
++if (!file) {
++  console.error("usage: npx tsx src/cli.ts <file>");
++  process.exit(1);
++}
++
++// Spec: fields never contain commas/quotes/newlines, so a line is a row and a
++// comma is a field separator. A trailing newline doesn't add an empty row.
++const lines = readFileSync(file, "utf8").split("\n");
++if (lines[lines.length - 1] === "") lines.pop();
++
++const [header, ...data] = lines;
++console.log(`rows: ${header === undefined ? 0 : data.length}`);
++console.log(`cols: ${header === undefined ? 0 : header.split(",").length}`);

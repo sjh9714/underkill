@@ -58,6 +58,10 @@ export interface Comparison {
   medianDeltaOffPony: number;
   medianDeltaOffOn: number;
   passRatePony: number;
+  // per-run medians: ponytail's rules mandate a self-check, so its footprint
+  // shows up as test LOC and cost rather than src LOC — report it, don't hide it
+  medianTestLoc: { off: number; pony: number; on: number };
+  medianCostUsd: { off: number; pony: number; on: number };
 }
 
 export interface ComparisonData extends Comparison {
@@ -89,11 +93,20 @@ export function buildComparison(baseRuns: RunResult[], ponyRuns: RunResult[]): C
   const deltas = (pick: (row: ComparisonRow) => number) =>
     rows.filter((r) => r.off !== 0).map((r) => round1(((pick(r) - r.off) / r.off) * 100));
   const ponyRunsAll = ponyRuns.filter((r) => r.condition === "ponytail");
+  const offAll = baseRuns.filter((r) => r.condition === "off");
+  const onAll = baseRuns.filter((r) => r.condition === "on");
+  const perRun = (pick: (r: RunResult) => number, round: (x: number) => number) => ({
+    off: round(median(offAll.map(pick))),
+    pony: round(median(ponyRunsAll.map(pick))),
+    on: round(median(onAll.map(pick))),
+  });
   return {
     rows,
     medianDeltaOffPony: round1(median(deltas((r) => r.pony))),
     medianDeltaOffOn: round1(median(deltas((r) => r.on))),
     passRatePony: ponyRunsAll.filter((r) => r.accepted).length / Math.max(ponyRunsAll.length, 1),
+    medianTestLoc: perRun((r) => r.locAddedTest, round1),
+    medianCostUsd: perRun((r) => r.totalCostUsd, (x) => Math.round(x * 1000) / 1000),
   };
 }
 
@@ -121,6 +134,10 @@ function renderComparison(c: ComparisonData): string {
     "|---|---|---|---|",
     `| Median src LOC delta per task | — | ${signed(c.medianDeltaOffPony)} | ${signed(c.medianDeltaOffOn)} |`,
     `| Acceptance pass rate | ${pct(sum((r) => r.passOff) / trialsTotal)} | ${pct(c.passRatePony)} | ${pct(sum((r) => r.passOn) / trialsTotal)} |`,
+    `| Median test LOC written per run¹ | ${c.medianTestLoc.off} | ${c.medianTestLoc.pony} | ${c.medianTestLoc.on} |`,
+    `| Median cost per run | $${c.medianCostUsd.off.toFixed(2)} | $${c.medianCostUsd.pony.toFixed(2)} | $${c.medianCostUsd.on.toFixed(2)} |`,
+    "",
+    `¹ ponytail's ruleset asks for "one runnable check" after non-trivial logic — that footprint lands in test LOC, which we track separately and never count against src LOC.`,
     "",
     "| Task | src LOC (median, off / ponytail / underkill) | pass (off / ponytail / underkill) |",
     "|---|---|---|",

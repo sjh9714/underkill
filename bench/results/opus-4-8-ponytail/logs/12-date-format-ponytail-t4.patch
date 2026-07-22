@@ -1,0 +1,9 @@
+diff --git a/src/cli.ts b/src/cli.ts
+new file mode 100644
+index 0000000..ace4a85
+--- /dev/null
++++ b/src/cli.ts
+@@ -0,0 +1,3 @@
++const iso = process.argv[2];
++// Input is always valid ISO UTC; reformat by slicing the canonical ISO string.
++console.log(new Date(iso).toISOString().slice(0, 16).replace("T", " "));

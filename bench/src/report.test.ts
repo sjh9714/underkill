@@ -76,6 +76,13 @@ describe("buildComparison", () => {
     expect(cmp.medianDeltaOffOn).toBe(-52.4);
     expect(cmp.passRatePony).toBeCloseTo(2 / 3);
   });
+
+  it("reports per-run test LOC and cost medians — the footprint ponytail's self-check rule adds", () => {
+    const ponyWithTests = pony.map((r) => ({ ...r, locAddedTest: 20, totalCostUsd: 0.17 }));
+    const c = buildComparison(base, ponyWithTests);
+    expect(c.medianTestLoc).toEqual({ off: 0, pony: 20, on: 0 });
+    expect(c.medianCostUsd).toEqual({ off: 0.1, pony: 0.17, on: 0.1 });
+  });
 });
 
 describe("renderReport", () => {

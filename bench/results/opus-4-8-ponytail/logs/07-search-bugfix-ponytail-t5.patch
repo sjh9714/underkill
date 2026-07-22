@@ -1,0 +1,14 @@
+diff --git a/src/search.ts b/src/search.ts
+index 470e9df..d0b73bc 100644
+--- a/src/search.ts
++++ b/src/search.ts
+@@ -5,7 +5,8 @@ export interface Product {
+ 
+ // Returns products whose name starts with the query, case-insensitively.
+ export function searchByPrefix(products: Product[], query: string): Product[] {
+-  return products.filter((product) => product.name.startsWith(query));
++  const q = query.toLowerCase();
++  return products.filter((product) => product.name.toLowerCase().startsWith(q));
+ }
+ 
+ export function sortByPrice(products: Product[]): Product[] {

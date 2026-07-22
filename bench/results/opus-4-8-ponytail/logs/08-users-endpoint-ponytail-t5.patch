@@ -1,0 +1,52 @@
+diff --git a/src/server.test.ts b/src/server.test.ts
+new file mode 100644
+index 0000000..2c4e2cb
+--- /dev/null
++++ b/src/server.test.ts
+@@ -0,0 +1,26 @@
++import { afterAll, beforeAll, expect, test } from "vitest";
++import type { AddressInfo } from "node:net";
++import { createServer } from "./server.ts";
++
++const server = createServer();
++let base: string;
++
++beforeAll(async () => {
++  await new Promise<void>((resolve) => server.listen(0, resolve));
++  base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
++});
++
++afterAll(() => server.close());
++
++test("GET /users/:id returns the matching user", async () => {
++  const res = await fetch(`${base}/users/2`);
++  expect(res.status).toBe(200);
++  expect(res.headers.get("content-type")).toBe("application/json");
++  expect(await res.json()).toEqual({ id: "2", name: "Grace" });
++});
++
++test("GET /users/:id returns 404 for unknown id", async () => {
++  const res = await fetch(`${base}/users/999`);
++  expect(res.status).toBe(404);
++  expect(await res.json()).toEqual({ error: "not found" });
++});
+diff --git a/src/server.ts b/src/server.ts
+index 0de3da7..a90a0d2 100644
+--- a/src/server.ts
++++ b/src/server.ts
+@@ -12,6 +12,15 @@ export function createServer(): Server {
+       res.end(JSON.stringify({ ok: true }));
+       return;
+     }
++    const userMatch = req.method === "GET" && req.url?.match(/^\/users\/([^/]+)$/);
++    if (userMatch) {
++      const user = users.find((u) => u.id === decodeURIComponent(userMatch[1]));
++      if (user) {
++        res.writeHead(200, { "content-type": "application/json" });
++        res.end(JSON.stringify(user));
++        return;
++      }
++    }
+     res.writeHead(404, { "content-type": "application/json" });
+     res.end(JSON.stringify({ error: "not found" }));
+   });

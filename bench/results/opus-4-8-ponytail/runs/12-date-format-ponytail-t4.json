@@ -1,0 +1,20 @@
+{
+  "runId": "12-date-format-ponytail-t4",
+  "taskId": "12-date-format",
+  "condition": "ponytail",
+  "trial": 4,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:59:16.896Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 3,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 3,
+  "totalCostUsd": 0.1184365,
+  "durationMs": 13334
+}

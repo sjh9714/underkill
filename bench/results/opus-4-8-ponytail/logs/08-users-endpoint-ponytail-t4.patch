@@ -1,0 +1,51 @@
+diff --git a/src/server.test.ts b/src/server.test.ts
+new file mode 100644
+index 0000000..6d081e0
+--- /dev/null
++++ b/src/server.test.ts
+@@ -0,0 +1,25 @@
++import { expect, test } from "vitest";
++import { createServer } from "./server.ts";
++
++async function get(path: string) {
++  const server = createServer().listen(0);
++  const { port } = server.address() as { port: number };
++  try {
++    const res = await fetch(`http://127.0.0.1:${port}${path}`);
++    return { status: res.status, body: await res.text() };
++  } finally {
++    server.close();
++  }
++}
++
++test("GET /users/:id returns the matching user", async () => {
++  const res = await get("/users/1");
++  expect(res.status).toBe(200);
++  expect(JSON.parse(res.body)).toEqual({ id: "1", name: "Ada" });
++});
++
++test("GET /users/:id 404s for unknown id", async () => {
++  const res = await get("/users/999");
++  expect(res.status).toBe(404);
++  expect(JSON.parse(res.body)).toEqual({ error: "not found" });
++});
+diff --git a/src/server.ts b/src/server.ts
+index 0de3da7..f4074bb 100644
+--- a/src/server.ts
++++ b/src/server.ts
+@@ -12,6 +12,15 @@ export function createServer(): Server {
+       res.end(JSON.stringify({ ok: true }));
+       return;
+     }
++    const match = req.method === "GET" && req.url?.match(/^\/users\/([^/]+)$/);
++    if (match) {
++      const user = users.find((u) => u.id === decodeURIComponent(match[1]));
++      if (user) {
++        res.writeHead(200, { "content-type": "application/json" });
++        res.end(JSON.stringify(user));
++        return;
++      }
++    }
+     res.writeHead(404, { "content-type": "application/json" });
+     res.end(JSON.stringify({ error: "not found" }));
+   });

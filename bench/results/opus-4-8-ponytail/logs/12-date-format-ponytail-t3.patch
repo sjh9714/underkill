@@ -1,0 +1,10 @@
+diff --git a/src/cli.ts b/src/cli.ts
+new file mode 100644
+index 0000000..79147e0
+--- /dev/null
++++ b/src/cli.ts
+@@ -0,0 +1,4 @@
++// Re-serialize through Date so any valid ISO input normalizes to UTC,
++// then take the "YYYY-MM-DDTHH:mm" prefix and swap the T for a space.
++const iso = process.argv[2];
++console.log(new Date(iso).toISOString().slice(0, 16).replace("T", " "));

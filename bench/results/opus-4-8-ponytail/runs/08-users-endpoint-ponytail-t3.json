@@ -1,0 +1,20 @@
+{
+  "runId": "08-users-endpoint-ponytail-t3",
+  "taskId": "08-users-endpoint",
+  "condition": "ponytail",
+  "trial": 3,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:55:46.049Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 9,
+  "locAddedTest": 25,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 7,
+  "totalCostUsd": 0.2119735,
+  "durationMs": 30431
+}

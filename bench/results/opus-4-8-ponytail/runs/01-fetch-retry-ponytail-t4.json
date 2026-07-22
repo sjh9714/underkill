@@ -1,0 +1,20 @@
+{
+  "runId": "01-fetch-retry-ponytail-t4",
+  "taskId": "01-fetch-retry",
+  "condition": "ponytail",
+  "trial": 4,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:50:32.519Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 13,
+  "locAddedTest": 24,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 6,
+  "totalCostUsd": 0.2023685,
+  "durationMs": 32423
+}

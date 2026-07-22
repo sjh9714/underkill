@@ -237,6 +237,16 @@ date-format 15→14 (all 9 accepted), while "on" sits at 18/7/6. The
 instruction-presence confound is dead: the effect comes from what the rules
 say, not from a CLAUDE.md existing.
 
+**Ponytail comparison** (D8, `bench/results/opus-4-8-ponytail/`, $10.39,
+pre-registered at `17ed0e5`): ponytail's ruleset genuinely works — **−27.9%
+median src LOC vs our −21%**, per-task wins split both ways, 60/60 accuracy.
+The honest readings: (1) its viral "80–94% less code" figures do not replicate
+here — the real scale of this whole category on small tasks is −20…−30%
+median; (2) its self-check rule adds a median 11 test LOC per run and ~40%
+higher cost ($0.17 vs $0.12/run); (3) publishing a comparison our own skill
+doesn't sweep is exactly what makes the benchmark credible — the benchmark,
+not the ruleset, is this repo's differentiated asset.
+
 **Sonnet 5 sweep** (`bench/results/sonnet-5/`, $13.80): direction replicates —
 7 of 12 tasks reduced, accuracy 120/120 in both conditions, 0 traps — with a
 smaller magnitude because Sonnet's baseline output is already leaner (e.g.

@@ -1,0 +1,40 @@
+diff --git a/src/index.test.ts b/src/index.test.ts
+new file mode 100644
+index 0000000..e217870
+--- /dev/null
++++ b/src/index.test.ts
+@@ -0,0 +1,12 @@
++import assert from "node:assert";
++import { markdownToc } from "./index";
++
++assert.strictEqual(markdownToc("no headings here"), "");
++assert.strictEqual(
++  markdownToc("# Hello World\n## Sub-Section!\ntext\n### A B C"),
++  "- [Hello World](#hello-world)\n  - [Sub-Section!](#sub-section)\n    - [A B C](#a-b-c)",
++);
++// "#nospace" and 7 hashes are not headings
++assert.strictEqual(markdownToc("#no\n####### too many"), "");
++
++console.log("ok");
+diff --git a/src/index.ts b/src/index.ts
+index 8a62428..e3f18d1 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,2 +1,16 @@
+ // The agent implements the requested function here.
+-export {};
++export function markdownToc(markdown: string): string {
++  const lines: string[] = [];
++  for (const line of markdown.split("\n")) {
++    const m = /^(#{1,6}) (.*)$/.exec(line);
++    if (!m) continue;
++    const level = m[1].length;
++    const title = m[2];
++    const anchor = title
++      .toLowerCase()
++      .replace(/ /g, "-")
++      .replace(/[^a-z0-9-]/g, "");
++    lines.push(`${"  ".repeat(level - 1)}- [${title}](#${anchor})`);
++  }
++  return lines.join("\n");
++}

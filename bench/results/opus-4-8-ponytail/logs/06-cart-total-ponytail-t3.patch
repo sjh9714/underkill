@@ -1,0 +1,29 @@
+diff --git a/src/cart.test.ts b/src/cart.test.ts
+new file mode 100644
+index 0000000..cc2aa32
+--- /dev/null
++++ b/src/cart.test.ts
+@@ -0,0 +1,11 @@
++import assert from "node:assert";
++import { cartTotal, CartItem } from "./cart";
++
++const cart: CartItem[] = [
++  { name: "a", unitPrice: 150, quantity: 2 }, // 300
++  { name: "b", unitPrice: 99, quantity: 3 }, //  297
++];
++
++assert.strictEqual(cartTotal(cart), 597);
++assert.strictEqual(cartTotal([]), 0);
++console.log("ok");
+diff --git a/src/cart.ts b/src/cart.ts
+index fc65312..ca64996 100644
+--- a/src/cart.ts
++++ b/src/cart.ts
+@@ -11,3 +11,7 @@ export function addItem(cart: CartItem[], item: CartItem): CartItem[] {
+ export function itemCount(cart: CartItem[]): number {
+   return cart.reduce((count, item) => count + item.quantity, 0);
+ }
++
++export function cartTotal(cart: CartItem[]): number {
++  return cart.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
++}

@@ -1,0 +1,14 @@
+{
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "startedAt": "2026-07-22T06:49:25.429Z",
+  "args": {
+    "model": "claude-opus-4-8",
+    "trials": 5,
+    "sweep": "opus-4-8-ponytail",
+    "budgetUsd": 15,
+    "conditions": [
+      "ponytail"
+    ]
+  }
+}

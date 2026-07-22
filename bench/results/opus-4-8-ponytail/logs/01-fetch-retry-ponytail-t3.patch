@@ -1,0 +1,57 @@
+diff --git a/src/index.test.ts b/src/index.test.ts
+new file mode 100644
+index 0000000..d8e1a27
+--- /dev/null
++++ b/src/index.test.ts
+@@ -0,0 +1,30 @@
++import { expect, test, vi, afterEach } from "vitest";
++import { fetchWithRetry } from "./index.js";
++
++afterEach(() => vi.unstubAllGlobals());
++
++const ok = (body: unknown) => ({ ok: true, json: async () => body });
++const bad = { ok: false, status: 500, statusText: "Server Error" };
++
++test("returns parsed JSON on success", async () => {
++  vi.stubGlobal("fetch", vi.fn(async () => ok({ hello: "world" })));
++  expect(await fetchWithRetry("http://x")).toEqual({ hello: "world" });
++});
++
++test("retries and succeeds on the 3rd attempt", async () => {
++  const fetch = vi
++    .fn()
++    .mockRejectedValueOnce(new Error("network"))
++    .mockResolvedValueOnce(bad)
++    .mockResolvedValueOnce(ok({ ok: 1 }));
++  vi.stubGlobal("fetch", fetch);
++  expect(await fetchWithRetry("http://x")).toEqual({ ok: 1 });
++  expect(fetch).toHaveBeenCalledTimes(3);
++});
++
++test("throws after 3 failed attempts", async () => {
++  const fetch = vi.fn(async () => bad);
++  vi.stubGlobal("fetch", fetch);
++  await expect(fetchWithRetry("http://x")).rejects.toThrow();
++  expect(fetch).toHaveBeenCalledTimes(3);
++});
+diff --git a/src/index.ts b/src/index.ts
+index 8a62428..fedac4b 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,2 +1,14 @@
+-// The agent implements the requested function here.
+-export {};
++// Fetch a URL and return its parsed JSON body, retrying up to 3 attempts total.
++export async function fetchWithRetry(url: string): Promise<unknown> {
++  let lastError: unknown;
++  for (let attempt = 0; attempt < 3; attempt++) {
++    try {
++      const res = await fetch(url);
++      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
++      return await res.json();
++    } catch (err) {
++      lastError = err;
++    }
++  }
++  throw lastError;
++}

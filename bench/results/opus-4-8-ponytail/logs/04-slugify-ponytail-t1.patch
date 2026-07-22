@@ -1,0 +1,29 @@
+diff --git a/src/index.ts b/src/index.ts
+index 8a62428..dcf16cb 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,2 +1,22 @@
+-// The agent implements the requested function here.
+-export {};
++export function slugify(text: string): string {
++  return text
++    .toLowerCase()
++    .replace(/[ _]+/g, "-")
++    .replace(/[^a-z0-9-]/g, "")
++    .replace(/-+/g, "-")
++    .replace(/^-+|-+$/g, "");
++}
++
++// self-check
++if (require.main === module) {
++  const eq = (a: string, b: string) => {
++    if (a !== b) throw new Error(`expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`);
++  };
++  eq(slugify("Hello World"), "hello-world");
++  eq(slugify("  foo _ bar  "), "foo-bar");
++  eq(slugify("a!!!b@@@c"), "abc");
++  eq(slugify("--already--slug--"), "already-slug");
++  eq(slugify("Mix_of Spaces__and_underscores"), "mix-of-spaces-and-underscores");
++  eq(slugify("!!!"), "");
++  console.log("ok");
++}

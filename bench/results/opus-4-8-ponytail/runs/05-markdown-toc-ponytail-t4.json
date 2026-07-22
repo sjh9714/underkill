@@ -1,0 +1,20 @@
+{
+  "runId": "05-markdown-toc-ponytail-t4",
+  "taskId": "05-markdown-toc",
+  "condition": "ponytail",
+  "trial": 4,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:54:07.806Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 14,
+  "locAddedTest": 17,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 6,
+  "totalCostUsd": 0.188835,
+  "durationMs": 27456
+}

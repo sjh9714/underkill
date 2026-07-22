@@ -1,0 +1,41 @@
+diff --git a/src/index.test.ts b/src/index.test.ts
+new file mode 100644
+index 0000000..5daefb5
+--- /dev/null
++++ b/src/index.test.ts
+@@ -0,0 +1,13 @@
++import { expect, test } from "vitest";
++import { markdownToc } from "./index.js";
++
++test("nests by level and slugifies anchors", () => {
++  const md = ["# Hello World", "## Sub-Section!", "text", "### A & B"].join("\n");
++  expect(markdownToc(md)).toBe(
++    ["- [Hello World](#hello-world)", "  - [Sub-Section!](#sub-section)", "    - [A & B](#a--b)"].join("\n"),
++  );
++});
++
++test("empty when no headings", () => {
++  expect(markdownToc("no headings\n####### too many")).toBe("");
++});
+diff --git a/src/index.ts b/src/index.ts
+index 8a62428..a5097d8 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,2 +1,15 @@
+-// The agent implements the requested function here.
+-export {};
++export function markdownToc(markdown: string): string {
++  const lines: string[] = [];
++  for (const line of markdown.split("\n")) {
++    const m = /^(#{1,6}) (.*)$/.exec(line);
++    if (!m) continue;
++    const level = m[1].length;
++    const title = m[2];
++    const anchor = title
++      .toLowerCase()
++      .replace(/ /g, "-")
++      .replace(/[^a-z0-9-]/g, "");
++    lines.push("  ".repeat(level - 1) + `- [${title}](#${anchor})`);
++  }
++  return lines.join("\n");
++}

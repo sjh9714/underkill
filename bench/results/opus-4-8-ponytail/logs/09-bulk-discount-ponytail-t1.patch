@@ -1,0 +1,29 @@
+diff --git a/src/pricing.test.ts b/src/pricing.test.ts
+new file mode 100644
+index 0000000..038a718
+--- /dev/null
++++ b/src/pricing.test.ts
+@@ -0,0 +1,11 @@
++import { strict as assert } from "node:assert";
++import { lineTotal } from "./pricing";
++
++// Below threshold: no discount.
++assert.equal(lineTotal({ sku: "a", unitPrice: 100, quantity: 9 }), 900);
++// At threshold: 10% off, rounded down to whole cents.
++assert.equal(lineTotal({ sku: "a", unitPrice: 100, quantity: 10 }), 900);
++// Rounding down: 333 * 11 = 3663, *0.9 = 3296.7 -> 3296.
++assert.equal(lineTotal({ sku: "a", unitPrice: 333, quantity: 11 }), 3296);
++
++console.log("ok");
+diff --git a/src/pricing.ts b/src/pricing.ts
+index 625c802..bc380b6 100644
+--- a/src/pricing.ts
++++ b/src/pricing.ts
+@@ -5,5 +5,6 @@ export interface LineItem {
+ }
+ 
+ export function lineTotal(item: LineItem): number {
+-  return item.unitPrice * item.quantity;
++  const total = item.unitPrice * item.quantity;
++  return item.quantity >= 10 ? Math.floor(total * 0.9) : total;
+ }

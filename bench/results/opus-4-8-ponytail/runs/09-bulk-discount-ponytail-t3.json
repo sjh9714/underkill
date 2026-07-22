@@ -1,0 +1,20 @@
+{
+  "runId": "09-bulk-discount-ponytail-t3",
+  "taskId": "09-bulk-discount",
+  "condition": "ponytail",
+  "trial": 3,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:56:43.752Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 2,
+  "locAddedTest": 11,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 2,
+  "trapsTriggered": [],
+  "numTurns": 5,
+  "totalCostUsd": 0.1652885,
+  "durationMs": 24597
+}

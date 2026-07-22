@@ -1,0 +1,54 @@
+diff --git a/src/index.test.ts b/src/index.test.ts
+new file mode 100644
+index 0000000..17653d8
+--- /dev/null
++++ b/src/index.test.ts
+@@ -0,0 +1,22 @@
++// Runnable self-check: `npx tsx src/index.test.ts`
++import assert from "node:assert";
++import { createTtlCache } from "./index";
++
++const realNow = Date.now;
++let now = 1_000_000;
++Date.now = () => now;
++
++const cache = createTtlCache<string>();
++assert.strictEqual(cache.get("missing"), undefined, "unset key -> undefined");
++
++cache.set("k", "v");
++assert.strictEqual(cache.get("k"), "v", "before expiry -> value");
++
++now += 59_999;
++assert.strictEqual(cache.get("k"), "v", "1ms before expiry -> value");
++
++now += 1; // exactly 60s later
++assert.strictEqual(cache.get("k"), undefined, "at expiry -> undefined");
++
++Date.now = realNow;
++console.log("ok");
+diff --git a/src/index.ts b/src/index.ts
+index 8a62428..fffdc94 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,2 +1,19 @@
+-// The agent implements the requested function here.
+-export {};
++const TTL_MS = 60_000;
++
++export function createTtlCache<V = unknown>() {
++  const store = new Map<string, { value: V; expires: number }>();
++  return {
++    set(key: string, value: V): void {
++      store.set(key, { value, expires: Date.now() + TTL_MS });
++    },
++    get(key: string): V | undefined {
++      const entry = store.get(key);
++      if (!entry) return undefined;
++      if (Date.now() >= entry.expires) {
++        store.delete(key);
++        return undefined;
++      }
++      return entry.value;
++    },
++  };
++}

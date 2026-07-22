@@ -1,0 +1,33 @@
+diff --git a/src/index.ts b/src/index.ts
+index 8a62428..4279cae 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,2 +1,8 @@
+-// The agent implements the requested function here.
+-export {};
++export function slugify(text: string): string {
++  return text
++    .toLowerCase()
++    .replace(/[ _]+/g, "-")       // space/underscore runs → hyphen
++    .replace(/[^a-z0-9-]/g, "")   // drop everything else
++    .replace(/-+/g, "-")          // collapse hyphen runs
++    .replace(/^-+|-+$/g, "");     // trim leading/trailing hyphens
++}
+diff --git a/src/slugify.test.ts b/src/slugify.test.ts
+new file mode 100644
+index 0000000..7516c81
+--- /dev/null
++++ b/src/slugify.test.ts
+@@ -0,0 +1,12 @@
++import assert from "node:assert";
++import { slugify } from "./index";
++
++assert.equal(slugify("Hello World"), "hello-world");
++assert.equal(slugify("foo_bar baz"), "foo-bar-baz");
++assert.equal(slugify("  __Hello__  World__  "), "hello-world");
++assert.equal(slugify("Café & Crème!"), "caf-crme"); // non-[a-z0-9-] dropped
++assert.equal(slugify("a---b"), "a-b");
++assert.equal(slugify("__ _ __"), "");
++assert.equal(slugify("Node.js 20"), "nodejs-20");
++
++console.log("ok");

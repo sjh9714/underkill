@@ -1,6 +1,6 @@
 # underkill
 
-**Your AI coding agent over-builds. This is a skill that stops it — and a benchmark that proves the number.**
+**Your AI coding agent over-builds. This is a 6-rule skill that stops it — and the first accuracy-gated benchmark of the prompts that claim to.**
 
 [![ci](https://github.com/sjh9714/underkill/actions/workflows/ci.yml/badge.svg)](https://github.com/sjh9714/underkill/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -11,9 +11,13 @@ one call site, an options object "for flexibility". It optimizes for *looking*
 complete. `underkill` is a short, opinionated skill (for Claude Code, Codex,
 and Cursor) that makes it build **exactly what you asked — nothing more.**
 
-The internet is full of "lazy senior dev mode" prompts. What's missing is
-evidence. So `underkill` ships with a reproducible benchmark that runs the same
-tasks with the skill **on vs. off** and measures what actually changes.
+The internet is full of "lazy senior dev mode" prompts — the biggest,
+[ponytail](https://github.com/DietrichGebert/ponytail), even ships its own
+numbers. What none of them have is a **hold-out correctness gate**: proof the
+smaller code still does what was asked. `underkill` ships a reproducible
+benchmark that scores every condition — no instructions, underkill, ponytail,
+and a placebo — against acceptance tests the agent never sees, and publishes
+whatever comes out, including where the competition wins.
 
 ## The claim (measured, not vibes)
 
@@ -103,6 +107,34 @@ index 0000000..1a44e18
 ```
 
 </details>
+
+#### How does it compare? off / ponytail / underkill
+
+An independent, pre-registered comparison (see D8 in [docs/DESIGN.md](docs/DESIGN.md)): [ponytail](https://github.com/DietrichGebert/ponytail)'s canonical `AGENTS.md` ruleset (v4.8.4 @16f2980, vendored verbatim) ran the same tasks, model, and trial count, injected exactly the way our snippet is. The hold-out accuracy gate applies to every condition equally. Raw runs: [`bench/results/opus-4-8-ponytail/`](bench/results/opus-4-8-ponytail/).
+
+| Metric | off | ponytail | underkill |
+|---|---|---|---|
+| Median src LOC delta per task | — | -27.9% | -21% |
+| Acceptance pass rate | 100% | 100% | 100% |
+| Median test LOC written per run¹ | 0 | 11 | 0 |
+| Median cost per run | $0.11 | $0.17 | $0.12 |
+
+¹ ponytail's ruleset asks for "one runnable check" after non-trivial logic — that footprint lands in test LOC, which we track separately and never count against src LOC.
+
+| Task | src LOC (median, off / ponytail / underkill) | pass (off / ponytail / underkill) |
+|---|---|---|
+| 01-fetch-retry | 15 / 13 / 13 | 5/5 · 5/5 · 5/5 |
+| 02-ttl-cache | 20 / 19 / 13 | 5/5 · 5/5 · 5/5 |
+| 03-todo-cli | 42 / 25 / 18 | 5/5 · 5/5 · 5/5 |
+| 04-slugify | 8 / 8 / 8 | 5/5 · 5/5 · 5/5 |
+| 05-markdown-toc | 21 / 15 / 15 | 5/5 · 5/5 · 5/5 |
+| 06-cart-total | 4 / 4 / 4 | 5/5 · 5/5 · 5/5 |
+| 07-search-bugfix | 3 / 2 / 3 | 5/5 · 5/5 · 5/5 |
+| 08-users-endpoint | 9 / 9 / 9 | 5/5 · 5/5 · 5/5 |
+| 09-bulk-discount | 5 / 2 / 2 | 5/5 · 5/5 · 5/5 |
+| 10-relative-time | 11 / 8 / 10 | 5/5 · 5/5 · 5/5 |
+| 11-csv-summarize | 21 / 14 / 7 | 5/5 · 5/5 · 5/5 |
+| 12-date-format | 15 / 4 / 6 | 5/5 · 5/5 · 5/5 |
 
 ### `claude-sonnet-5` — 12 tasks × 5 trials per condition
 

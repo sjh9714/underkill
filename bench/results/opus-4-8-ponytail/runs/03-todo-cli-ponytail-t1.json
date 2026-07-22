@@ -1,0 +1,20 @@
+{
+  "runId": "03-todo-cli-ponytail-t1",
+  "taskId": "03-todo-cli",
+  "condition": "ponytail",
+  "trial": 1,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:51:33.441Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 25,
+  "locAddedTest": 0,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 0,
+  "trapsTriggered": [],
+  "numTurns": 6,
+  "totalCostUsd": 0.17762450000000002,
+  "durationMs": 24362
+}

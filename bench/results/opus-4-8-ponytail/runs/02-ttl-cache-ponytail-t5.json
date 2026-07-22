@@ -1,0 +1,20 @@
+{
+  "runId": "02-ttl-cache-ponytail-t5",
+  "taskId": "02-ttl-cache",
+  "condition": "ponytail",
+  "trial": 5,
+  "model": "claude-opus-4-8",
+  "cliVersion": "2.1.216 (Claude Code)",
+  "ranAt": "2026-07-22T06:51:31.077Z",
+  "accepted": true,
+  "failingTests": [],
+  "locAddedSrc": 19,
+  "locAddedTest": 25,
+  "filesCreated": 1,
+  "depsAdded": [],
+  "exportedSymbols": 1,
+  "trapsTriggered": [],
+  "numTurns": 5,
+  "totalCostUsd": 0.17546250000000002,
+  "durationMs": 25730
+}

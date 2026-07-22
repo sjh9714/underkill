@@ -1,0 +1,35 @@
+diff --git a/src/format.test.ts b/src/format.test.ts
+new file mode 100644
+index 0000000..7eb5ae6
+--- /dev/null
++++ b/src/format.test.ts
+@@ -0,0 +1,13 @@
++import { strict as assert } from "node:assert";
++import { formatRelative, formatTimestamp } from "./format";
++
++const now = 1_000_000_000_000;
++assert.equal(formatRelative(now, now), "0s ago");
++assert.equal(formatRelative(now - 59_000, now), "59s ago");
++assert.equal(formatRelative(now - 60_000, now), "1m ago");
++assert.equal(formatRelative(now - 59 * 60_000, now), "59m ago");
++assert.equal(formatRelative(now - 60 * 60_000, now), "1h ago");
++assert.equal(formatRelative(now - 23 * 3_600_000, now), "23h ago");
++assert.equal(formatRelative(now - 24 * 3_600_000, now), formatTimestamp(now - 24 * 3_600_000));
++
++console.log("ok");
+diff --git a/src/format.ts b/src/format.ts
+index 8acf66e..ba7ba93 100644
+--- a/src/format.ts
++++ b/src/format.ts
+@@ -4,3 +4,11 @@ export function formatTimestamp(ms: number): string {
+   const d = new Date(ms);
+   return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
+ }
++
++export function formatRelative(ms: number, nowMs: number): string {
++  const s = Math.floor((nowMs - ms) / 1000);
++  if (s < 60) return `${s}s ago`;
++  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
++  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
++  return formatTimestamp(ms);
++}
