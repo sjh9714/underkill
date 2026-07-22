@@ -1,0 +1,37 @@
+name: Adversarial task proposal
+description: Propose a benchmark task you believe breaks the headline claim
+title: "[task] "
+labels: [task-proposal]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The strongest contribution is a task where you expect the skill to
+        *fail*: hurt correctness, overcount traps, or penalize the baseline
+        unfairly. See CONTRIBUTING.md for the task layout and validity gate.
+  - type: input
+    id: title
+    attributes:
+      label: Task title
+      placeholder: e.g. "Add pagination to an existing REST handler"
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: The prompt the agent would receive
+      description: Behavior spec only — no tests, no hints about metrics.
+    validations:
+      required: true
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Why you expect this task to break the claim
+      placeholder: e.g. "Rule 4 will make the agent skip validation the tests require"
+    validations:
+      required: true
+  - type: textarea
+    id: traps
+    attributes:
+      label: Proposed traps
+      description: What unrequested surface should count as over-building here?

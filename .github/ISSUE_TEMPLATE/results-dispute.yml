@@ -1,0 +1,32 @@
+name: Results dispute
+description: Challenge a number in the README — every run has committed evidence
+title: "[dispute] "
+labels: [results-dispute]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every run's raw stream log and diff live under
+        `bench/results/<sweep>/logs/`, and the README tables regenerate
+        deterministically from `bench/results/<sweep>/runs/` (CI-checked).
+        Point at the exact runs you think are wrong.
+  - type: input
+    id: runs
+    attributes:
+      label: Run id(s)
+      placeholder: e.g. 11-csv-summarize-off-t1
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What the README claims vs. what you observe
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Quote the log/diff lines, or attach a reproduction sweep.
+    validations:
+      required: true
