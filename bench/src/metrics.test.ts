@@ -79,4 +79,30 @@ describe("collectMetrics", () => {
     const m = await collectMetrics(dir, task);
     expect(m.trapsTriggered).toEqual(["in-code", "new-dependency", "extra-exports"]);
   });
+
+  it("touches-outside fires when non-test files outside the allowed globs changed", async () => {
+    const scoped: Task = {
+      ...task,
+      traps: [{ name: "unrelated-changes", detect: { type: "touches-outside", allow: ["src/index.ts"] } }],
+    };
+    // src/util.ts and package.json changed and are outside the allow list
+    const m = await collectMetrics(dir, scoped);
+    expect(m.trapsTriggered).toEqual(["unrelated-changes"]);
+  });
+
+  it("touches-outside ignores agent-written test files", async () => {
+    const scoped: Task = {
+      ...task,
+      traps: [
+        {
+          name: "unrelated-changes",
+          detect: { type: "touches-outside", allow: ["src/index.ts", "src/util.ts", "package.json"] },
+        },
+      ],
+    };
+    // the only remaining changed file is src/index.test.ts — exempt by design:
+    // writing tests is never counted as out-of-scope (test LOC is tracked separately)
+    const m = await collectMetrics(dir, scoped);
+    expect(m.trapsTriggered).toEqual([]);
+  });
 });

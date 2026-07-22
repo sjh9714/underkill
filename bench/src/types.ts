@@ -7,7 +7,9 @@ export interface Trap {
   detect:
     | { type: "regex"; pattern: string; glob: string }
     | { type: "deps-added" }
-    | { type: "exports-gt"; max: number };
+    | { type: "exports-gt"; max: number }
+    // brownfield: fires when a changed non-test file matches none of `allow`
+    | { type: "touches-outside"; allow: string[] };
 }
 
 export interface Task {

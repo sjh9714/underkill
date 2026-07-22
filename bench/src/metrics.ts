@@ -112,6 +112,10 @@ export async function collectMetrics(dir: string, task: Task): Promise<ScopeMetr
   }
 
   const nameStatus = git(dir, "diff", "--cached", "HEAD", "--name-status");
+  const changedFiles = nameStatus
+    .split("\n")
+    .filter(Boolean)
+    .map((l) => l.split("\t").at(-1)!);
   const filesCreated = nameStatus
     .split("\n")
     .filter((l) => l.startsWith("A\t")).length;
@@ -150,8 +154,15 @@ export async function collectMetrics(dir: string, task: Task): Promise<ScopeMetr
       }
     } else if (d.type === "deps-added") {
       hit = depsAdded.length > 0;
-    } else {
+    } else if (d.type === "exports-gt") {
       hit = exportedSymbols > d.max;
+    } else {
+      // touches-outside: agent-written test files are exempt by design — tests
+      // are never counted as out-of-scope (their LOC is tracked separately)
+      const allowed = d.allow.map(globToRegex);
+      hit = changedFiles.some(
+        (file) => !isTestFile(file) && !allowed.some((re) => re.test(file)),
+      );
     }
     if (hit) trapsTriggered.push(trap.name);
   }
