@@ -1,20 +1,38 @@
+import { execFileSync } from "node:child_process";
+import { cp, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 import type { Condition } from "./types.js";
 
-// Prepare an isolated workspace for one run and return its path + a scratch
-// CLAUDE_CONFIG_DIR. Implements design decision D5 (isolation).
-//
-// TODO(phase-1):
-//  - mkdtemp under bench/.workspaces/
-//  - copy tasks/<taskId>/template/ into it
-//  - `git init && git add -A && git commit -m baseline` (anchor for diff metrics)
-//  - if condition === "on": write CLAUDE.md with the byte-exact contents of
-//    skill/dist/claude-code/CLAUDE.md.snippet — the artifact users are told to
-//    install — so the measured effect is the shipped product's; else nothing
-//  - create a separate empty dir to use as CLAUDE_CONFIG_DIR so the user's global
-//    ~/.claude config never leaks into either condition
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+
+function git(dir: string, ...args: string[]): void {
+  execFileSync("git", ["-C", dir, ...args], { stdio: "ignore" });
+}
+
+// Prepare an isolated workspace for one run (design decision D5): temp copy of
+// the task template, a git baseline commit to anchor diff metrics, and a scratch
+// CLAUDE_CONFIG_DIR so the user's global config never leaks into either
+// condition. "on" injects the byte-exact shipped snippet, committed into the
+// baseline so it never appears in the diff.
 export async function prepareWorkspace(
-  _taskId: string,
-  _condition: Condition,
+  taskId: string,
+  condition: Condition,
 ): Promise<{ dir: string; configDir: string }> {
-  throw new Error("not implemented");
+  const base = path.join(root, "bench/.workspaces");
+  await mkdir(base, { recursive: true });
+  const dir = await mkdtemp(path.join(base, `${taskId}-${condition}-`));
+  await cp(path.join(root, "bench/tasks", taskId, "template"), dir, { recursive: true });
+  if (condition === "on") {
+    const snippet = await readFile(
+      path.join(root, "skill/dist/claude-code/CLAUDE.md.snippet"),
+      "utf8",
+    );
+    await writeFile(path.join(dir, "CLAUDE.md"), snippet);
+  }
+  git(dir, "init", "-q", "-b", "main");
+  git(dir, "add", "-A");
+  git(dir, "-c", "user.name=bench", "-c", "user.email=bench@local", "commit", "-q", "-m", "baseline");
+  const configDir = await mkdtemp(path.join(base, "config-"));
+  return { dir, configDir };
 }
