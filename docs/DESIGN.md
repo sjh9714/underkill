@@ -50,6 +50,17 @@ no security framing (so Fable stays on).
   date).
 - **D7 — One source (`skill/rules.md`) → all variants** via
   `scripts/build-dist.ts`; CI checks they stay in sync.
+- **D8 — Competing-skill comparison protocol** (pre-registered here, before any
+  comparison run exists). Any third-party ruleset is benchmarked as its own
+  condition under the *identical* protocol: same 12 tasks (frozen at
+  `b8b53da`), same model and K, ruleset injected as `CLAUDE.md` the same way
+  ours is (D1) — we measure the effect of the *rules*; platform-specific hook
+  machinery is out of scope and stated as such. The vendored ruleset is
+  verbatim and commit-pinned with provenance (`bench/ponytail-rules.md`,
+  MIT). Every number is published regardless of who wins, alongside the same
+  raw logs and diffs. First subject: DietrichGebert/ponytail v4.8.4
+  (@16f2980) — its own benchmark reports LOC/cost/time but documents no
+  hold-out correctness gate; ours applies one to every condition equally.
 
 ## 1. The skill — DONE
 
