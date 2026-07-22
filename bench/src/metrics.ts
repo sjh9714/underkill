@@ -11,7 +11,8 @@ import type { Task } from "./types.js";
 //  - depsAdded: diff of package.json dependencies + devDependencies
 //  - exportedSymbols: count exports in src/** via ts-morph
 //  - trapsTriggered: evaluate each task.traps[] detector (regex / deps-added /
-//    exports-gt) against the final workspace
+//    exports-gt) against the final workspace. Strip comments before regex
+//    matching — a comment like "no exponential backoff" must not trip a trap.
 export interface ScopeMetrics {
   locAddedSrc: number;
   locAddedTest: number;

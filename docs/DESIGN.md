@@ -26,10 +26,13 @@ no security framing (so Fable stays on).
 
 ## Key design decisions
 
-- **D1 — Benchmark injects the ruleset deterministically** (via `CLAUDE.md` /
-  `--append-system-prompt`), not via Agent Skills auto-trigger. We measure the
-  *effect of the rules*, not the *probability the skill triggers* (which is
-  noisy and would muddy the result).
+- **D1 — Benchmark injects the ruleset deterministically** (via `CLAUDE.md`),
+  not via Agent Skills auto-trigger. We measure the *effect of the rules*, not
+  the *probability the skill triggers* (which is noisy and would muddy the
+  result). What gets injected is the **byte-exact
+  `skill/dist/claude-code/CLAUDE.md.snippet`** users are told to install — the
+  measured number must apply to the shipped artifact, not a longer internal
+  variant.
 - **D2 — Accuracy is the primary gate, LOC is secondary.** Hold-out acceptance
   tests the agent never sees. A run that fails them is a FAIL; pass rate is
   reported for both conditions. Defends "less code = broken code".
@@ -67,12 +70,23 @@ bench/tasks/<id>/
   acceptance/   # hold-out vitest tests — copied in AFTER the run
   reference/    # minimal correct implementation — CI checks the tests are valid
 ```
+Task-authoring invariant: **every behavior `prompt.md` requires is verified by
+`acceptance/`, or it comes out of the prompt.** Untested spec lines are attack
+surface ("your own reference doesn't implement the spec").
+
 `traps[]` = per-task detectors for things not asked for, e.g.:
 ```json
 { "name": "config-object", "detect": { "type": "regex", "pattern": "interface \\w*Options", "glob": "src/**" } }
 { "name": "new-dependency", "detect": { "type": "deps-added" } }
 { "name": "extra-exports",  "detect": { "type": "exports-gt", "max": 1 } }
 ```
+Traps are the headline metric, so they get the same validity treatment as the
+acceptance tests: regex traps match against **comment-stripped** source (a
+comment saying "no exponential backoff" must not fire), patterns target real
+surface (an extra function parameter, an Options type) rather than incidental
+naming (a local `retries` counter is not configurability), and CI asserts that
+each task's `reference/` fires **zero** traps while a committed overbuilt
+fixture fires the expected ones.
 
 ### 12 tasks (diversity defends selection bias)
 - **Greenfield utils (4):** fetch-with-retry, TTL cache, slugify, markdown TOC.
@@ -85,7 +99,8 @@ bench/tasks/<id>/
 
 ### Run flow (one run)
 1. `mkdtemp` → copy `template/` → `git init && git commit` (baseline).
-2. Inject condition: **on** → write `CLAUDE.md` with the ruleset; **off** → nothing.
+2. Inject condition: **on** → write `CLAUDE.md` with the byte-exact contents of
+   `skill/dist/claude-code/CLAUDE.md.snippet` (D1); **off** → nothing.
 3. `spawn`:
    ```
    CLAUDE_CONFIG_DIR=<isolated dir> claude -p "$(cat prompt.md)" \
@@ -123,6 +138,8 @@ $60–180, 3–5 h at 3-way parallel. Sonnet 5 sweep ≈ $25–75. Guardrails:
 | "skill lowers capability" | pass rate reported per condition |
 | "the off condition was rigged" | `CLAUDE_CONFIG_DIR` isolation; only the injected file differs; harness code public |
 | "agent gamed the tests" | tests are hold-out; CI checks reference passes & empty template fails |
+| "trap regexes overcount" | traps match comment-stripped source; CI asserts reference fires 0 traps and an overbuilt fixture fires the expected ones |
+| "any instructions at all would do that" | acknowledged limitation: on-vs-off answers the user-relevant question (install it or not), not instruction-presence vs. this ruleset; pilot optionally adds a small placebo-CLAUDE.md arm to check |
 
 ## 3. Repo layout, CI, README
 
@@ -140,7 +157,8 @@ underkill/
 
 **CI runs no API calls** (bench costs money): typecheck + harness unit tests
 (fixture diffs → metric assertions); **task validity** (each `reference/` passes
-its `acceptance/`, and an empty `template/` fails); SKILL.md frontmatter lint +
+its `acceptance/`, an empty `template/` fails, `reference/` fires zero traps,
+and an overbuilt fixture fires the expected ones); SKILL.md frontmatter lint +
 dist-in-sync check; results.json schema + "README tables regenerate identically"
 check. The sweep runs out-of-CI via manual `workflow_dispatch` (maintainer API
 key) and results are committed by PR. README states this explicitly.

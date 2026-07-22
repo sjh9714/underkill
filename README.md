@@ -78,6 +78,11 @@ Skeptical? Good. The benchmark is built to survive scrutiny:
   ones where the skill does nothing. Raw per-run logs ship as release artifacts.
 - **Fixed and recorded.** Model alias, CLI version, and run date are written into
   `results.json` for every run.
+- **What on-vs-off does and doesn't claim.** The "on" condition injects the exact
+  snippet you'd install; "off" is a bare workspace — the real-world default. That
+  answers "does installing this help?", not "would any instructions help?" —
+  instruction-presence is a possible confound, checkable with a small
+  placebo-instructions arm in the pilot.
 
 See [`docs/DESIGN.md`](docs/DESIGN.md) for the full design and the skeptic-defense matrix.
 

@@ -9,7 +9,7 @@
     "bench": "tsx bench/src/run.ts",
     "report": "tsx bench/src/report.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests --exclude \"bench/tasks/**\""
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
